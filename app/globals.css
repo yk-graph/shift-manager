@@ -1,26 +1,46 @@
 @import 'tailwindcss';
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  /* Brand */
+  --color-brand-ember: var(--color-orange-700);
+  --color-brand-ember-dark: var(--color-orange-900);
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Text */
+  --color-text-primary: var(--color-stone-800);
+  --color-text-secondary: var(--color-stone-500);
+  --color-text-disabled: var(--color-stone-400);
+  --color-text-on-brand: var(--color-white);
+  --color-text-inverse: var(--color-stone-50);
+  --color-text-inverse-muted: var(--color-stone-300);
+  --color-text-inverse-subtle: var(--color-stone-400);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Background */
+  --color-bg-page: var(--color-stone-50);
+  --color-bg-surface: var(--color-white);
+  --color-bg-subtle: var(--color-stone-100);
+  --color-bg-disabled: var(--color-stone-200);
+  --color-bg-inverse: var(--color-stone-800);
+  --color-bg-inverse-hover: var(--color-stone-700);
+
+  /* Border */
+  --color-border-default: var(--color-stone-200);
+  --color-border-strong: var(--color-stone-800);
+
+  /* Status */
+  --color-status-success: var(--color-green-700);
+  --color-status-success-bg: var(--color-green-100);
+  --color-status-warning: var(--color-amber-700);
+  --color-status-warning-bg: var(--color-amber-100);
+  --color-status-neutral: var(--color-stone-500);
+  --color-status-neutral-bg: var(--color-stone-100);
+
+  /* Font families */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', Arial, Helvetica, sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-bg-page);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
 }
