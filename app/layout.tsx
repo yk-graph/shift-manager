@@ -13,12 +13,18 @@ const playfairDisplay = Playfair_Display({
   weight: ['700'],
 })
 
+const playfair = Playfair_Display({
+  variable: '--font-playfair',
+  subsets: ['latin'],
+  weight: ['700'],
+})
+
 export const metadata: Metadata = {
-  title: 'Shift Manager',
-  description: 'Shift management application',
+  title: 'ABC Dumplings',
+  description: 'Handmade Dumplings · Vancouver',
 }
 
-export default function RootLayout({ children }: LayoutProps<'/'>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} ${playfairDisplay.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">{children}</body>
