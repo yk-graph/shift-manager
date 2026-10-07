@@ -1,6 +1,11 @@
 'use client'
 
+import { useActionState } from 'react'
+import { login } from './actions'
+
 export default function LoginPage() {
+  const [state, formAction, pending] = useActionState(login, {})
+
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 font-sans selection:bg-brand-ember selection:text-text-on-brand">
       <div className="hidden lg:flex bg-bg-inverse text-text-inverse px-20 py-16 flex-col justify-between relative min-h-screen">
@@ -38,11 +43,13 @@ export default function LoginPage() {
             <p className="text-xs lg:text-sm text-text-secondary mt-1 font-normal">Use the email your manager gave you.</p>
           </div>
 
-          <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
+          <form action={formAction} className="space-y-4">
             <div>
               <label className="block text-xs font-medium text-text-primary mb-1.5">Email</label>
               <input
                 type="email"
+                name="email"
+                required
                 placeholder="maria@abcdumplings.ca"
                 className="w-full px-3.5 py-2.5 rounded-lg bg-bg-surface border border-border-default focus:outline-none focus:ring-1 focus:ring-brand-ember focus:border-brand-ember text-sm text-text-primary placeholder:text-text-disabled"
               />
@@ -52,16 +59,21 @@ export default function LoginPage() {
               <label className="block text-xs font-medium text-text-primary mb-1.5">Password</label>
               <input
                 type="password"
+                name="password"
+                required
                 placeholder="••••••••••••"
                 className="w-full px-3.5 py-2.5 rounded-lg bg-bg-surface border border-border-default focus:outline-none focus:ring-1 focus:ring-brand-ember focus:border-brand-ember text-sm text-text-primary placeholder:text-text-disabled"
               />
             </div>
 
+            {state.error && <p className="text-sm text-red-600">{state.error}</p>}
+
             <button
               type="submit"
+              disabled={pending}
               className="w-full bg-brand-ember hover:bg-brand-ember-dark text-text-on-brand font-medium py-2.5 rounded-lg transition shadow-sm text-sm mt-1"
             >
-              Log in
+              {pending ? 'Logging in…' : 'Log in'}
             </button>
           </form>
 

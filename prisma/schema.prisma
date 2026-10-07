@@ -1,0 +1,90 @@
+// After changing this file run: npx prisma migrate dev --name <what-changed>
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  employee
+  admin
+}
+
+// Employees and admins
+model User {
+  id           String   @id @default(uuid()) @db.Uuid
+  name         String
+  email        String   @unique
+  phone        String?
+  passwordHash String   @map("password_hash")
+  role         Role     @default(employee)
+  isActive     Boolean  @default(true) @map("is_active") // false = deactivated
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  sessions     Session[]
+  shifts       Shift[]
+  shiftChanges ShiftChange[] // changes this user made as an admin
+
+  @@map("users")
+}
+
+// Cookie sessions
+model Session {
+  id        String   @id
+  userId    String   @map("user_id") @db.Uuid
+  expiresAt DateTime @map("expires_at") @db.Timestamptz
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model Branch {
+  id      Int     @id @default(autoincrement())
+  name    String  @unique
+  address String
+
+  shifts Shift[]
+
+  @@map("branches")
+}
+
+// One row per clock-in to clock-out. clockOut = null means "still clocked in".
+model Shift {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  branchId  Int       @map("branch_id")
+  clockIn   DateTime  @map("clock_in") @db.Timestamptz
+  clockOut  DateTime? @map("clock_out") @db.Timestamptz
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
+
+  user    User          @relation(fields: [userId], references: [id])
+  branch  Branch        @relation(fields: [branchId], references: [id])
+  changes ShiftChange[]
+
+  @@index([userId, clockIn])
+  @@map("shifts")
+}
+
+// Change log: which admin changed a shift, when, and why.
+model ShiftChange {
+  id          String    @id @default(uuid()) @db.Uuid
+  shiftId     String    @map("shift_id") @db.Uuid
+  changedById String    @map("changed_by") @db.Uuid
+  changedAt   DateTime  @default(now()) @map("changed_at") @db.Timestamptz
+  oldClockIn  DateTime  @map("old_clock_in") @db.Timestamptz
+  newClockIn  DateTime  @map("new_clock_in") @db.Timestamptz
+  oldClockOut DateTime? @map("old_clock_out") @db.Timestamptz
+  newClockOut DateTime? @map("new_clock_out") @db.Timestamptz
+  reason      String    @default("Forgot to clock out")
+
+  shift     Shift @relation(fields: [shiftId], references: [id])
+  changedBy User  @relation(fields: [changedById], references: [id])
+
+  @@map("shift_changes")
+}
