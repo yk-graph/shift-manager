@@ -1,15 +1,26 @@
 import type { Metadata } from 'next'
-import type { ReactNode } from 'react'
+import { Inter, Playfair_Display } from 'next/font/google'
 import './globals.css'
 
+const inter = Inter({
+  variable: '--font-inter',
+  subsets: ['latin'],
+})
+
+const playfairDisplay = Playfair_Display({
+  variable: '--font-playfair',
+  subsets: ['latin'],
+  weight: ['700'],
+})
+
 export const metadata: Metadata = {
-  title: 'Shift Manager',
-  description: 'Shift management application',
+  title: 'ABC Dumplings',
+  description: 'Handmade Dumplings · Vancouver',
 }
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="h-full antialiased">
+    <html lang="en" className={`${inter.variable} ${playfairDisplay.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   )

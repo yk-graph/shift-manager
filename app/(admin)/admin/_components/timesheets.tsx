@@ -49,8 +49,8 @@ export function Timesheets({
         </div>
       </div>
 
-      <div className="mt-5 overflow-hidden rounded-xl border border-[#e4e0dc] bg-white">
-        <div className="hidden grid-cols-[150px_240px_140px_220px_1fr_70px] border-b border-[#e4e0dc] px-6 py-4 text-sm font-bold text-[#77716d] lg:grid">
+      <div className="mt-5 overflow-hidden rounded-xl border border-border-default bg-bg-surface">
+        <div className="hidden grid-cols-[150px_240px_140px_220px_1fr_70px] border-b border-border-default px-6 py-4 text-sm font-bold text-text-secondary lg:grid">
           <span>Date</span>
           <span>Employee</span>
           <span>Branch</span>
@@ -61,12 +61,12 @@ export function Timesheets({
 
         {grouped.map((group) => (
           <div key={group.day}>
-            <div className="grid grid-cols-2 bg-[#f3f2f1] px-4 py-3 text-sm lg:grid-cols-[150px_1fr_1fr] lg:px-6">
-              <span className={`font-bold ${group.day === 'Sat, Oct 3' ? 'text-[#cf3a08]' : ''}`}>{group.day}</span>
-              <span className="hidden text-[#77716d] lg:block">
+            <div className="grid grid-cols-2 bg-bg-subtle px-4 py-3 text-sm lg:grid-cols-[150px_1fr_1fr] lg:px-6">
+              <span className={`font-bold ${group.day === 'Sat, Oct 3' ? 'text-brand-ember' : ''}`}>{group.day}</span>
+              <span className="hidden text-text-secondary lg:block">
                 {new Set(group.rows.map((row) => row.employeeId)).size} people · {group.rows.length} shifts
               </span>
-              <span className="text-right text-[#77716d]">{group.total}</span>
+              <span className="text-right text-text-secondary">{group.total}</span>
             </div>
 
             {group.rows.map((shift) => {
@@ -75,22 +75,22 @@ export function Timesheets({
                 <button
                   key={shift.id}
                   onClick={() => onEditShift(shift.id)}
-                  className="grid w-full grid-cols-[36px_1fr_auto] items-center gap-2 border-t border-[#e4e0dc] px-4 py-3 text-left transition hover:bg-[#fffaf7] lg:grid-cols-[150px_240px_140px_220px_1fr_70px] lg:px-6"
+                  className="grid w-full grid-cols-[36px_1fr_auto] items-center gap-2 border-t border-border-default px-4 py-3 text-left transition hover:bg-bg-subtle lg:grid-cols-[150px_240px_140px_220px_1fr_70px] lg:px-6"
                 >
-                  <span className="grid size-7 place-items-center rounded-full bg-[#f4f3f2] text-xs text-[#9a948f] lg:hidden">
+                  <span className="grid size-7 place-items-center rounded-full bg-bg-subtle text-xs text-text-disabled lg:hidden">
                     {employee.initials}
                   </span>
                   <span className="hidden lg:block" />
                   <span className="min-w-0">
                     <span className="flex items-center gap-3">
-                      <span className="hidden size-7 place-items-center rounded-full bg-[#f4f3f2] text-xs text-[#9a948f] lg:grid">
+                      <span className="hidden size-7 place-items-center rounded-full bg-bg-subtle text-xs text-text-disabled lg:grid">
                         {employee.initials}
                       </span>
                       <span className="font-medium">{employee.name}</span>
                     </span>
                     <span className="mt-1 flex items-center gap-2 lg:hidden">
                       <BranchBadge branch={shift.branch} />
-                      <span className="text-sm text-[#77716d]">
+                      <span className="text-sm text-text-secondary">
                         {shift.clockIn} – {shift.clockOut}
                       </span>
                     </span>
@@ -103,12 +103,12 @@ export function Timesheets({
                   </span>
                   <span
                     className={`font-bold ${
-                      shift.onShift ? 'text-[#11843c]' : shift.isOpen ? 'text-[#c65b08]' : 'text-[#292524]'
+                      shift.onShift ? 'text-status-success' : shift.isOpen ? 'text-status-warning' : 'text-text-primary'
                     }`}
                   >
                     {shift.onShift ? `${shift.duration} · on shift` : shift.duration}
                   </span>
-                  <span className="hidden text-right text-sm text-[#625c58] lg:block">Edit</span>
+                  <span className="hidden text-right text-sm text-text-secondary lg:block">Edit</span>
                 </button>
               )
             })}
@@ -117,11 +117,11 @@ export function Timesheets({
       </div>
 
       <div className="mt-5 hidden gap-5 text-sm lg:flex">
-        <span className="text-[#11843c]">
-          On shift <span className="text-[#77716d]">On shift now</span>
+        <span className="text-status-success">
+          On shift <span className="text-text-secondary">On shift now</span>
         </span>
-        <span className="text-[#c65b08]">
-          Open <span className="text-[#77716d]">Shift still open</span>
+        <span className="text-status-warning">
+          Open <span className="text-text-secondary">Shift still open</span>
         </span>
       </div>
     </section>
@@ -134,10 +134,10 @@ export function EditShift({ onBack, onSaveShiftEdit }: { onBack: () => void; onS
       <BackButton label="Timesheets" onClick={onBack} />
       <PageTitle title="Maria Santos" subtitle="Thu, Oct 1, 2026 · Gastown" />
 
-      <form className="mt-7 max-w-[640px] rounded-none border-0 bg-transparent lg:rounded-xl lg:border lg:border-[#e4e0dc] lg:bg-white lg:p-9">
-        <div className="mb-6 flex items-end justify-between rounded-lg bg-[#f4f3f2] p-4">
+      <form className="mt-7 max-w-[640px] rounded-none border-0 bg-transparent lg:rounded-xl lg:border lg:border-border-default lg:bg-bg-surface lg:p-9">
+        <div className="mb-6 flex items-end justify-between rounded-lg bg-bg-subtle p-4">
           <div>
-            <p className="text-sm text-[#77716d]">Recorded</p>
+            <p className="text-sm text-text-secondary">Recorded</p>
             <p className="mt-1 text-lg font-medium">8:00 AM – 4:30 PM</p>
           </div>
           <p className="font-bold">8h 30m</p>
@@ -148,9 +148,9 @@ export function EditShift({ onBack, onSaveShiftEdit }: { onBack: () => void; onS
           <Field label="Clock-out time" defaultValue="5:00 PM" />
         </div>
         <Field label="Reason (optional)" placeholder="Forgot to clock out" />
-        <p className="-mt-2 text-sm text-[#77716d]">Leave empty to use “Forgot to clock out.”</p>
+        <p className="-mt-2 text-sm text-text-secondary">Leave empty to use “Forgot to clock out.”</p>
 
-        <div className="mt-5 flex gap-3 rounded-lg bg-[#fff0bf] px-4 py-3 text-sm text-[#c65b08]">
+        <div className="mt-5 flex gap-3 rounded-lg bg-status-warning-bg px-4 py-3 text-sm text-status-warning">
           <Icon name="clock" className="mt-0.5 size-4 shrink-0" />
           <p>Saved to the change log with your name, the time, and the reason.</p>
         </div>

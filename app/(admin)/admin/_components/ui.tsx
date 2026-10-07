@@ -85,8 +85,8 @@ export function Icon({ name, className = '' }: { name: IconName; className?: str
 export function Brand() {
   return (
     <div className="flex items-center gap-2">
-      <span className="size-5 rounded-full bg-[#cf3a08]" />
-      <span className="font-serif text-[22px] font-bold leading-none tracking-tight text-[#24201f] lg:text-white">
+      <span className="size-5 rounded-full bg-brand-ember" />
+      <span className="font-serif text-[22px] font-bold leading-none tracking-tight text-text-primary lg:text-text-on-brand">
         ABC Dumplings
       </span>
     </div>
@@ -95,9 +95,9 @@ export function Brand() {
 
 export function Pill({ children, tone = 'green' }: { children: ReactNode; tone?: 'green' | 'amber' | 'gray' }) {
   const toneClass = {
-    green: 'bg-[#d9f9e3] text-[#11843c]',
-    amber: 'bg-[#fff0bf] text-[#c65b08]',
-    gray: 'bg-[#f1efee] text-[#77716d]',
+    green: 'bg-status-success-bg text-status-success',
+    amber: 'bg-status-warning-bg text-status-warning',
+    gray: 'bg-bg-subtle text-text-secondary',
   }[tone]
 
   return (
@@ -134,10 +134,10 @@ export function Button({
   type?: 'button' | 'submit'
 }) {
   const variantClass = {
-    primary: 'bg-[#cf3a08] text-white hover:bg-[#b93207]',
-    secondary: 'border border-[#24201f] bg-white text-[#24201f] hover:bg-[#f5f3f1]',
-    ghost: 'text-[#5f5955] hover:text-[#24201f]',
-    dark: 'bg-[#282220] text-white hover:bg-[#181412]',
+    primary: 'bg-brand-ember text-text-on-brand hover:bg-brand-ember-dark',
+    secondary: 'border border-border-strong bg-bg-surface text-text-primary hover:bg-bg-subtle',
+    ghost: 'text-text-secondary hover:text-text-primary',
+    dark: 'bg-bg-inverse text-text-on-brand hover:bg-bg-inverse-hover',
   }[variant]
 
   return (
@@ -154,17 +154,17 @@ export function Button({
 export function PageTitle({ title, subtitle }: { title: string; subtitle?: string }) {
   return (
     <div>
-      <h1 className="font-serif text-[40px] font-bold leading-none tracking-tight text-[#24201f] lg:text-[44px]">
+      <h1 className="font-serif text-[40px] font-bold leading-none tracking-tight text-text-primary lg:text-[44px]">
         {title}
       </h1>
-      {subtitle && <p className="mt-2 text-base text-[#77716d] lg:text-lg">{subtitle}</p>}
+      {subtitle && <p className="mt-2 text-base text-text-secondary lg:text-lg">{subtitle}</p>}
     </div>
   )
 }
 
 export function BackButton({ label, onClick }: { label: string; onClick: () => void }) {
   return (
-    <button onClick={onClick} className="mb-7 inline-flex items-center gap-2 text-sm font-bold text-[#55504d]">
+    <button onClick={onClick} className="mb-7 inline-flex items-center gap-2 text-sm font-bold text-text-secondary">
       <Icon name="arrowLeft" className="size-4" />
       {label}
     </button>
@@ -184,14 +184,14 @@ export function Field({
 }) {
   return (
     <label className="mb-5 block last:mb-0">
-      <span className="mb-2 block text-sm font-medium text-[#292524]">{label}</span>
+      <span className="mb-2 block text-sm font-medium text-text-primary">{label}</span>
       <span className="relative block">
         <input
           defaultValue={defaultValue}
           placeholder={placeholder}
-          className="h-14 w-full rounded-lg border border-[#ded9d5] bg-white px-4 text-base outline-none transition placeholder:text-[#aaa5a2] focus:border-[#cf3a08]"
+          className="h-14 w-full rounded-lg border border-border-default bg-bg-surface px-4 text-base outline-none transition placeholder:text-text-disabled focus:border-brand-ember"
         />
-        {icon && <Icon name={icon} className="absolute right-4 top-1/2 size-5 -translate-y-1/2 text-[#77716d]" />}
+        {icon && <Icon name={icon} className="absolute right-4 top-1/2 size-5 -translate-y-1/2 text-text-secondary" />}
       </span>
     </label>
   )
