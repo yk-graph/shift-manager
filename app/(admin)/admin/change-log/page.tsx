@@ -1,3 +1,6 @@
+import { ChangeLog } from '../_components/change-log'
+import { changeLog } from '../_lib/mock-data'
+
 export default function ChangeLogPage() {
-  return <h1 className="text-h1">Change log</h1>
+  return <ChangeLog entries={changeLog} />
 }
