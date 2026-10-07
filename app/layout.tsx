@@ -13,12 +13,6 @@ const playfairDisplay = Playfair_Display({
   weight: ['700'],
 })
 
-const playfair = Playfair_Display({
-  variable: '--font-playfair',
-  subsets: ['latin'],
-  weight: ['700'],
-})
-
 export const metadata: Metadata = {
   title: 'ABC Dumplings',
   description: 'Handmade Dumplings · Vancouver',

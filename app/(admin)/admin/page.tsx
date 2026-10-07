@@ -1,24 +1,18 @@
-import Link from 'next/link'
 import { requireRole } from '@/lib/auth'
-import { getClockedInNow } from '@/lib/queries'
-import { formatDateTime } from '@/lib/time'
+import { formatLongDate } from '@/lib/format'
+import { Dashboard } from './_components/dashboard'
+import { getDashboardData } from '@/lib/admin-data'
 
 export default async function AdminDashboardPage() {
-  await requireRole('admin')
-  const openShifts = await getClockedInNow()
+  const admin = await requireRole('admin')
+  const { clockedIn, hoursThisWeek } = await getDashboardData()
 
   return (
-    <div>
-      <h1 className="text-h1">Dashboard</h1>
-      <h2>Clocked in right now ({openShifts.length})</h2>
-      <ul>
-        {openShifts.map((shift) => (
-          <li key={shift.id}>
-            <Link href={`/admin/employees/${shift.user.id}`}>{shift.user.name}</Link> | {shift.branch.name} | since{' '}
-            {formatDateTime(shift.clockIn)} | <Link href={`/admin/shifts/${shift.id}`}>shift</Link>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Dashboard
+      adminName={admin.name}
+      today={formatLongDate(new Date())}
+      clockedIn={clockedIn}
+      hoursThisWeek={hoursThisWeek}
+    />
   )
 }

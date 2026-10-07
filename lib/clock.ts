@@ -1,9 +1,6 @@
+import { CLOCK_IN_OPENS, CLOCK_OUT_CLOSES, EARLIEST_CLOCK_IN_HOUR, LATEST_CLOCK_OUT_HOUR } from '@/lib/clock-rules'
 import { prisma } from '@/lib/prisma'
 import { vancouverHour } from '@/lib/time'
-
-// Clock rules (Vancouver time)
-const EARLIEST_CLOCK_IN_HOUR = 8 // 8:00 AM
-const LATEST_CLOCK_OUT_HOUR = 23 // 11:00 PM
 
 // These functions throw an Error with a friendly message when a rule is broken.
 // Server actions catch it and show the message to the user.
@@ -14,7 +11,7 @@ export async function clockIn(userId: string, branchId: number) {
 
   // If the current time is before the earliest clock-in time, throw an error.
   if (vancouverHour(now) < EARLIEST_CLOCK_IN_HOUR) {
-    throw new Error(`You cannot clock in before ${EARLIEST_CLOCK_IN_HOUR}:00 AM.`)
+    throw new Error(`You cannot clock in before ${CLOCK_IN_OPENS}.`)
   }
 
   // If the user is already clocked in, throw an error.
@@ -40,7 +37,7 @@ export async function clockOut(userId: string) {
 
   // If the current time is after the latest clock-out time, throw an error.
   if (vancouverHour(now) >= LATEST_CLOCK_OUT_HOUR) {
-    throw new Error(`It is after ${LATEST_CLOCK_OUT_HOUR - 12}:00 PM. Please ask an admin to clock you out.`)
+    throw new Error(`It is after ${CLOCK_OUT_CLOSES}. Please ask an admin to clock you out.`)
   }
 
   // If the clock-out time is before the clock-in time, throw an error.

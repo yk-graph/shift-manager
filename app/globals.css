@@ -2,9 +2,7 @@
 
 @theme {
   --font-serif: var(--font-playfair), Georgia, serif;
-}
 
-@theme {
   /* Brand */
   --color-brand-ember: var(--color-orange-700);
   --color-brand-ember-dark: var(--color-orange-900);

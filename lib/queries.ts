@@ -3,7 +3,7 @@ import { TIMEZONE } from '@/lib/time'
 
 // Read-only queries used by the pages.
 // Call `requireRole(...)` in the page first, then call these.
-// Weekly totals are calculated by Postgres (SUM + date_trunc), as the requirements ask.
+// Totals are calculated by Postgres (SUM + date_trunc), as the requirements ask.
 // Postgres weeks start on Monday.
 
 // ---------- Shared ----------
@@ -22,6 +22,32 @@ export async function getWeekRange(weeksAgo = 0) {
   return rows[0]
 }
 
+// Total hours worked between two dates (closed shifts only).
+// Pass a userId for one employee, or leave it out for everyone.
+export async function getTotalHours(start: Date, end: Date, userId?: string) {
+  const rows = await prisma.$queryRaw<{ totalHours: number }[]>`
+    SELECT COALESCE(SUM(EXTRACT(EPOCH FROM clock_out - clock_in)) / 3600, 0)::float AS "totalHours"
+    FROM shifts
+    WHERE clock_in >= ${start} AND clock_in < ${end}
+      AND (${userId ?? null}::uuid IS NULL OR user_id = ${userId ?? null}::uuid)
+  `
+  return rows[0].totalHours
+}
+
+// Total hours per day (Vancouver time) between two dates.
+// Returns: [{ day: "2026-10-05", totalHours: 21 }, ...]
+export async function getDailyTotals(start: Date, end: Date) {
+  return prisma.$queryRaw<{ day: string; totalHours: number }[]>`
+    SELECT
+      to_char(clock_in AT TIME ZONE ${TIMEZONE}, 'YYYY-MM-DD') AS "day",
+      COALESCE(SUM(EXTRACT(EPOCH FROM clock_out - clock_in)) / 3600, 0)::float AS "totalHours"
+    FROM shifts
+    WHERE clock_in >= ${start} AND clock_in < ${end}
+    GROUP BY 1
+    ORDER BY 1
+  `
+}
+
 // ---------- Employee ----------
 
 // The shift the user is currently clocked in to, or null if clocked out.
@@ -32,26 +58,17 @@ export async function getOpenShift(userId: string) {
   })
 }
 
-// Every shift of one user, grouped by week, with a total per week.
-// Returns: [{ weekStart, weekEnd, totalHours, shifts: [...] }, ...] (newest week first)
-export async function getTimesheet(userId: string) {
-  const weeks = await prisma.$queryRaw<{ weekStart: Date; weekEnd: Date; totalHours: number }[]>`
-    SELECT
-      date_trunc('week', clock_in AT TIME ZONE ${TIMEZONE}) AT TIME ZONE ${TIMEZONE} AS "weekStart",
-      (date_trunc('week', clock_in AT TIME ZONE ${TIMEZONE}) + interval '7 days') AT TIME ZONE ${TIMEZONE} AS "weekEnd",
-      COALESCE(SUM(EXTRACT(EPOCH FROM clock_out - clock_in)) / 3600, 0)::float AS "totalHours"
-    FROM shifts
-    WHERE user_id = ${userId}::uuid
-    GROUP BY 1, 2
-    ORDER BY 1 DESC
-  `
-
-  const shifts = await getShiftsForEmployee(userId)
-
-  return weeks.map((week) => ({
-    ...week,
-    shifts: shifts.filter((shift) => shift.clockIn >= week.weekStart && shift.clockIn < week.weekEnd),
-  }))
+// Shifts of one employee (newest first). `start` / `end` are optional filters.
+// `changes` holds the latest admin change (empty if the shift was never changed).
+export async function getShiftsForEmployee(userId: string, start?: Date, end?: Date) {
+  return prisma.shift.findMany({
+    where: { userId, clockIn: { gte: start, lt: end } },
+    include: {
+      branch: true,
+      changes: { orderBy: { changedAt: 'desc' }, take: 1 },
+    },
+    orderBy: { clockIn: 'desc' },
+  })
 }
 
 // ---------- Admin ----------
@@ -103,26 +120,13 @@ export async function getHoursByEmployee(start: Date, end: Date) {
   `
 }
 
-// Shifts of one employee (newest first). `start` / `end` are optional filters.
-// `_count.changes > 0` means the shift was "Changed by admin".
-export async function getShiftsForEmployee(userId: string, start?: Date, end?: Date) {
+// Shifts of all employees (newest first). `start` / `end` are optional filters.
+export async function getShifts(start?: Date, end?: Date) {
   return prisma.shift.findMany({
-    where: { userId, clockIn: { gte: start, lt: end } },
-    include: {
-      branch: true,
-      _count: { select: { changes: true } },
-    },
-    orderBy: { clockIn: 'desc' },
-  })
-}
-
-// Every shift of every employee, newest first (for /admin/timesheets).
-export async function getAllShifts() {
-  return prisma.shift.findMany({
+    where: { clockIn: { gte: start, lt: end } },
     include: {
       user: { select: { id: true, name: true } },
       branch: true,
-      _count: { select: { changes: true } },
     },
     orderBy: { clockIn: 'desc' },
   })
@@ -148,7 +152,7 @@ export async function getChangeLog() {
   return prisma.shiftChange.findMany({
     include: {
       changedBy: { select: { id: true, name: true } },
-      shift: { include: { user: { select: { id: true, name: true } } } },
+      shift: { include: { user: { select: { id: true, name: true } }, branch: true } },
     },
     orderBy: { changedAt: 'desc' },
   })
