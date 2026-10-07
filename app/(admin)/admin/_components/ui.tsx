@@ -172,11 +172,17 @@ export function BackButton({ label, onClick }: { label: string; onClick: () => v
 
 export function Field({
   label,
+  name,
+  type = 'text',
+  required,
   placeholder,
   defaultValue,
   icon,
 }: {
   label: string
+  name?: string
+  type?: string
+  required?: boolean
   placeholder?: string
   defaultValue?: string
   icon?: IconName
@@ -186,6 +192,9 @@ export function Field({
       <span className="mb-2 block text-sm font-medium text-text-primary">{label}</span>
       <span className="relative block">
         <input
+          name={name}
+          type={type}
+          required={required}
           defaultValue={defaultValue}
           placeholder={placeholder}
           className="h-14 w-full rounded-lg border border-border-default bg-bg-surface px-4 text-base outline-none transition placeholder:text-text-disabled focus:border-brand-ember"

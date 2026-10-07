@@ -16,7 +16,9 @@ export type ClockedIn = {
   employeeId: string
   employeeName: string
   day: string
+  dayValue: string // "2026-10-02", sent with the clock-out form
   clockInTime: string
+  clockInValue: string // "13:10", for <input type="time">
   since: string
   duration: string
   branch: string
@@ -53,8 +55,9 @@ export type ShiftToEdit = {
   branch: string
   recorded: string
   duration: string
-  clockIn: string
-  clockOut: string
+  dayValue: string // "2026-10-02", sent with the edit form
+  clockInValue: string // "08:00", for <input type="time">
+  clockOutValue: string // "" when the shift is still open
 }
 
 export type ChangeLogEntry = {

@@ -18,12 +18,6 @@ export function Dashboard({
 }) {
   const [clockOutShift, setClockOutShift] = useState<ClockedIn | null>(null)
 
-  function handleSaveClockOut(shiftId: string) {
-    // Backend hook: close open shift and append a change-log entry.
-    void shiftId
-    setClockOutShift(null)
-  }
-
   return (
     <section className="mx-auto max-w-[1104px]">
       <PageTitle title={`Hi ${adminName.split(' ')[0]}`} subtitle={today} />
@@ -97,13 +91,7 @@ export function Dashboard({
         </div>
       </div>
 
-      {clockOutShift && (
-        <ClockOutModal
-          shift={clockOutShift}
-          onCancel={() => setClockOutShift(null)}
-          onSaveClockOut={handleSaveClockOut}
-        />
-      )}
+      {clockOutShift && <ClockOutModal shift={clockOutShift} onClose={() => setClockOutShift(null)} />}
     </section>
   )
 }
