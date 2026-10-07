@@ -1,4 +1,4 @@
-import type { ChangeLogEntry } from '../_lib/types'
+import type { ChangeLogEntry } from '@/lib/admin-types'
 import { Icon, PageTitle } from './ui'
 
 export function ChangeLog({ entries }: { entries: ChangeLogEntry[] }) {
@@ -20,7 +20,7 @@ export function ChangeLog({ entries }: { entries: ChangeLogEntry[] }) {
           </thead>
           <tbody>
             {entries.map((entry) => (
-              <tr key={`${entry.when}-${entry.employee}`} className="border-b border-border-default last:border-b-0">
+              <tr key={entry.id} className="border-b border-border-default last:border-b-0">
                 <td className="px-6 py-5">
                   <p className="font-bold">{entry.when}</p>
                   <p className="mt-1 text-sm text-text-secondary">{entry.time}</p>
@@ -43,10 +43,7 @@ export function ChangeLog({ entries }: { entries: ChangeLogEntry[] }) {
 
       <div className="mt-5 space-y-4 lg:hidden">
         {entries.slice(0, 4).map((entry) => (
-          <article
-            key={`${entry.when}-${entry.employee}`}
-            className="rounded-xl border border-border-default bg-bg-surface p-4"
-          >
+          <article key={entry.id} className="rounded-xl border border-border-default bg-bg-surface p-4">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <h3 className="font-bold">{entry.employee}</h3>

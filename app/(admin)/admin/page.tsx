@@ -1,33 +1,18 @@
-'use client'
-
-import { useState } from 'react'
-import { ClockOutModal } from './_components/clock-out-modal'
+import { requireRole } from '@/lib/auth'
+import { formatLongDate } from '@/lib/format'
 import { Dashboard } from './_components/dashboard'
-import { clockedIn, employees } from './_lib/mock-data'
+import { getDashboardData } from '@/lib/admin-data'
 
-export default function AdminDashboardPage() {
-  const [clockOutEmployeeId, setClockOutEmployeeId] = useState<number | null>(null)
-  const clockOutEmployee =
-    clockOutEmployeeId === null
-      ? null
-      : (employees.find((employee) => employee.id === clockOutEmployeeId) ?? employees[0])
-
-  function handleSaveClockOut(employeeId: number) {
-    // Backend hook: close open shift and append a change-log entry.
-    void employeeId
-    setClockOutEmployeeId(null)
-  }
+export default async function AdminDashboardPage() {
+  const admin = await requireRole('admin')
+  const { clockedIn, hoursThisWeek } = await getDashboardData()
 
   return (
-    <>
-      <Dashboard employees={employees} clockedIn={clockedIn} onClockOut={setClockOutEmployeeId} />
-      {clockOutEmployee && (
-        <ClockOutModal
-          employee={clockOutEmployee}
-          onCancel={() => setClockOutEmployeeId(null)}
-          onSaveClockOut={handleSaveClockOut}
-        />
-      )}
-    </>
+    <Dashboard
+      adminName={admin.name}
+      today={formatLongDate(new Date())}
+      clockedIn={clockedIn}
+      hoursThisWeek={hoursThisWeek}
+    />
   )
 }

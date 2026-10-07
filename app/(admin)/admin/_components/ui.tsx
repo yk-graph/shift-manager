@@ -1,5 +1,4 @@
 import type { ReactNode, SVGProps } from 'react'
-import type { Branch } from '../_lib/types'
 
 export type IconName =
   'dashboard' | 'employees' | 'calendar' | 'history' | 'arrowLeft' | 'plus' | 'eye' | 'clock' | 'lock'
@@ -108,7 +107,7 @@ export function Pill({ children, tone = 'green' }: { children: ReactNode; tone?:
   )
 }
 
-export function BranchBadge({ branch }: { branch: Branch }) {
+export function BranchBadge({ branch }: { branch: string }) {
   return (
     <span
       className={`rounded-md px-2 py-0.5 text-sm font-medium ${

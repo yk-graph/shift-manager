@@ -1,18 +1,25 @@
+'use client'
+
 import Link from 'next/link'
-import type { Employee, Shift } from '../_lib/types'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import type { ClockedIn, Employee, Shift } from '@/lib/admin-types'
+import { ClockOutModal } from './clock-out-modal'
 import { BackButton, Button, Field, PageTitle, Pill } from './ui'
 
-export function Employees({
-  employees,
-  onDeactivate,
-}: {
-  employees: Employee[]
-  onDeactivate: (employeeId: number) => void
-}) {
+function onDeactivate(employeeId: string) {
+  // Backend hook: deactivate/reactivate employee, then refresh the page.
+  void employeeId
+}
+
+export function Employees({ employees }: { employees: Employee[] }) {
+  const activeCount = employees.filter((employee) => employee.status === 'Active').length
+  const deactivatedCount = employees.length - activeCount
+
   return (
     <section className="mx-auto max-w-[1104px]">
       <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-        <PageTitle title="Employees" subtitle="6 people · 5 active" />
+        <PageTitle title="Employees" subtitle={`${employees.length} people · ${activeCount} active`} />
         <Link
           href="/admin/employees/new"
           className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-brand-ember px-5 text-base font-bold text-text-on-brand transition hover:bg-brand-ember-dark lg:w-auto"
@@ -22,12 +29,14 @@ export function Employees({
       </div>
 
       <div className="mt-4 flex gap-2">
-        <span className="rounded-full bg-bg-inverse px-4 py-2 text-sm font-bold text-text-on-brand">All (6)</span>
-        <span className="rounded-full border border-border-default bg-bg-surface px-4 py-2 text-sm font-bold text-text-secondary">
-          Active (5)
+        <span className="rounded-full bg-bg-inverse px-4 py-2 text-sm font-bold text-text-on-brand">
+          All ({employees.length})
         </span>
         <span className="rounded-full border border-border-default bg-bg-surface px-4 py-2 text-sm font-bold text-text-secondary">
-          Deactivated (1)
+          Active ({activeCount})
+        </span>
+        <span className="rounded-full border border-border-default bg-bg-surface px-4 py-2 text-sm font-bold text-text-secondary">
+          Deactivated ({deactivatedCount})
         </span>
       </div>
 
@@ -126,24 +135,28 @@ export function AddEmployee({ onBack, onCreateEmployee }: { onBack: () => void; 
 export function EmployeeDetail({
   employee,
   shifts,
-  onBack,
-  onClockOut,
-  onDeactivate,
+  weekLabel,
+  total,
+  openShift,
 }: {
   employee: Employee
   shifts: Shift[]
-  onBack: () => void
-  onClockOut: (employeeId: number) => void
-  onDeactivate: (employeeId: number) => void
+  weekLabel: string
+  total: string
+  openShift: ClockedIn | null
 }) {
-  const employeeShifts = shifts
-    .filter((shift) => shift.employeeId === employee.id)
-    .slice(-5)
-    .reverse()
+  const router = useRouter()
+  const [showClockOut, setShowClockOut] = useState(false)
+
+  function handleSaveClockOut(shiftId: string) {
+    // Backend hook: close open shift and append a change-log entry.
+    void shiftId
+    setShowClockOut(false)
+  }
 
   return (
     <section className="mx-auto max-w-[1104px]">
-      <BackButton label="Employees" onClick={onBack} />
+      <BackButton label="Employees" onClick={() => router.push('/admin/employees')} />
       <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
         <PageTitle
           title={employee.name}
@@ -151,16 +164,20 @@ export function EmployeeDetail({
         />
         <div className="grid grid-cols-2 gap-3 lg:flex">
           <Button variant="secondary" onClick={() => onDeactivate(employee.id)}>
-            Deactivate
+            {employee.status === 'Active' ? 'Deactivate' : 'Reactivate'}
           </Button>
-          <Button variant="dark" onClick={() => onClockOut(employee.id)}>
-            Clock out now
-          </Button>
+          {openShift && (
+            <Button variant="dark" onClick={() => setShowClockOut(true)}>
+              Clock out now
+            </Button>
+          )}
         </div>
       </div>
 
       <div className="mt-7 rounded-none border-0 bg-transparent lg:rounded-xl lg:border lg:border-border-default lg:bg-bg-surface lg:p-7">
-        <h2 className="text-xl font-bold lg:text-2xl">Shifts · Sep 28 – Oct 4 · Total 31h 45m</h2>
+        <h2 className="text-xl font-bold lg:text-2xl">
+          Shifts · {weekLabel} · Total {total}
+        </h2>
 
         <div className="mt-4 hidden lg:block">
           <table className="w-full border-collapse">
@@ -174,13 +191,15 @@ export function EmployeeDetail({
               </tr>
             </thead>
             <tbody>
-              {employeeShifts.map((shift) => (
+              {shifts.map((shift) => (
                 <tr key={shift.id} className="border-b border-border-default last:border-b-0">
                   <td className="py-5 font-bold">{shift.day}</td>
                   <td className="py-5">{shift.clockIn}</td>
                   <td className="py-5">{shift.isOpen ? <Pill tone="amber">Open</Pill> : shift.clockOut}</td>
                   <td className="py-5">{shift.isOpen ? '—' : shift.duration}</td>
-                  <td className="py-5 text-right text-sm text-text-secondary">Edit</td>
+                  <td className="py-5 text-right text-sm text-text-secondary">
+                    <Link href={`/admin/shifts/${shift.id}`}>Edit</Link>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -188,13 +207,13 @@ export function EmployeeDetail({
         </div>
 
         <div className="mt-4 space-y-3 lg:hidden">
-          {employeeShifts.slice(0, 3).map((shift) => (
+          {shifts.map((shift) => (
             <article key={shift.id} className="rounded-xl border border-border-default bg-bg-surface p-4">
               <div className="flex justify-between gap-3 text-sm text-text-secondary">
                 <span>
                   {shift.day} · {shift.branch}
                 </span>
-                <span>Edit</span>
+                <Link href={`/admin/shifts/${shift.id}`}>Edit</Link>
               </div>
               <div className="mt-3 flex items-center justify-between gap-3">
                 <p className="text-lg font-medium">
@@ -206,6 +225,10 @@ export function EmployeeDetail({
           ))}
         </div>
       </div>
+
+      {showClockOut && openShift && (
+        <ClockOutModal shift={openShift} onCancel={() => setShowClockOut(false)} onSaveClockOut={handleSaveClockOut} />
+      )}
     </section>
   )
 }

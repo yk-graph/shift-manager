@@ -1,19 +1,21 @@
-'use client'
-
-import { useRouter } from 'next/navigation'
+import { requireRole } from '@/lib/auth'
 import { Timesheets } from '../_components/timesheets'
-import { employees, shifts } from '../_lib/mock-data'
+import { getTimesheetData } from '@/lib/admin-data'
 
-export default function AdminTimesheetsPage() {
-  const router = useRouter()
+// ?week=0 is this week, ?week=1 is last week, ...
+export default async function AdminTimesheetsPage({ searchParams }: { searchParams: Promise<{ week?: string }> }) {
+  await requireRole('admin')
+  const { week } = await searchParams
+  const weeksAgo = Number(week) || 0
+  const data = await getTimesheetData(weeksAgo)
 
   return (
     <Timesheets
-      employees={employees}
-      shifts={shifts}
-      onEditShift={(shiftId) => {
-        router.push(`/admin/shifts/${shiftId}`)
-      }}
+      days={data.days}
+      weekLabel={data.weekLabel}
+      total={data.total}
+      people={data.people}
+      weeksAgo={weeksAgo}
     />
   )
 }

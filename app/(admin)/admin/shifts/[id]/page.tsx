@@ -1,15 +1,13 @@
-'use client'
-
-import { useRouter } from 'next/navigation'
+import { notFound } from 'next/navigation'
+import { requireRole } from '@/lib/auth'
 import { EditShift } from '../../_components/timesheets'
+import { getShiftToEdit } from '@/lib/admin-data'
 
-export default function ShiftDetailPage() {
-  const router = useRouter()
+export default async function ShiftDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  await requireRole('admin')
+  const { id } = await params
+  const shift = await getShiftToEdit(id)
+  if (!shift) notFound()
 
-  function handleSaveShiftEdit() {
-    // Backend hook: save edited shift and append a change-log entry.
-    router.push('/admin/timesheets')
-  }
-
-  return <EditShift onBack={() => router.push('/admin/timesheets')} onSaveShiftEdit={handleSaveShiftEdit} />
+  return <EditShift shift={shift} />
 }

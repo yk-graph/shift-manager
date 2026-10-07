@@ -1,13 +1,10 @@
-'use client'
-
+import { requireRole } from '@/lib/auth'
 import { Employees } from '../_components/employees'
-import { employees } from '../_lib/mock-data'
+import { getEmployeeList } from '@/lib/admin-data'
 
-export default function EmployeesPage() {
-  function handleDeactivateEmployee(employeeId: number) {
-    // Backend hook: deactivate/reactivate employee, then refresh employee list.
-    void employeeId
-  }
+export default async function EmployeesPage() {
+  await requireRole('admin')
+  const employees = await getEmployeeList()
 
-  return <Employees employees={employees} onDeactivate={handleDeactivateEmployee} />
+  return <Employees employees={employees} />
 }

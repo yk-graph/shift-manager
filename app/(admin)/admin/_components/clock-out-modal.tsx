@@ -1,20 +1,22 @@
-import type { Employee } from '../_lib/types'
+import type { ClockedIn } from '@/lib/admin-types'
 import { Button, Field } from './ui'
 
 export function ClockOutModal({
-  employee,
+  shift,
   onCancel,
   onSaveClockOut,
 }: {
-  employee: Employee
+  shift: ClockedIn
   onCancel: () => void
-  onSaveClockOut: (employeeId: number) => void
+  onSaveClockOut: (shiftId: string) => void
 }) {
   return (
     <div className="fixed inset-0 z-40 grid place-items-center bg-black/35 px-5">
       <div className="w-full max-w-[532px] rounded-2xl bg-bg-surface p-5 shadow-2xl lg:p-9">
         <h2 className="font-serif text-[28px] font-bold leading-none">Close open shift</h2>
-        <p className="mt-5 text-text-secondary">{employee.name} · Fri, Oct 2 · clocked in 1:10 PM</p>
+        <p className="mt-5 text-text-secondary">
+          {shift.employeeName} · {shift.day} · clocked in {shift.clockInTime}
+        </p>
 
         <div className="mt-5">
           <Field label="Clock-out time" defaultValue="5:00 PM" />
@@ -29,7 +31,7 @@ export function ClockOutModal({
           <Button variant="secondary" className="w-full lg:w-auto" onClick={onCancel}>
             Cancel
           </Button>
-          <Button className="w-full lg:w-auto" onClick={() => onSaveClockOut(employee.id)}>
+          <Button className="w-full lg:w-auto" onClick={() => onSaveClockOut(shift.shiftId)}>
             Save clock-out
           </Button>
         </div>

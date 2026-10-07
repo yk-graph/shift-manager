@@ -3,6 +3,8 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import type { ReactNode } from 'react'
+import { logout } from '@/app/(public)/login/actions'
+import { initials } from '@/lib/format'
 import { Brand, Icon, type IconName } from './ui'
 
 const navItems: Array<{ href: string; label: string; icon: IconName; match: (pathname: string) => boolean }> = [
@@ -27,7 +29,7 @@ const navItems: Array<{ href: string; label: string; icon: IconName; match: (pat
   },
 ]
 
-export function AdminShell({ children }: { children: ReactNode }) {
+export function AdminShell({ adminName, children }: { adminName: string; children: ReactNode }) {
   const pathname = usePathname()
 
   return (
@@ -56,8 +58,13 @@ export function AdminShell({ children }: { children: ReactNode }) {
         </nav>
 
         <div className="mt-auto text-text-on-brand">
-          <p className="font-bold">Daniel Kim</p>
-          <p className="mt-1 text-sm text-text-inverse-muted">Admin · Log out</p>
+          <p className="font-bold">{adminName}</p>
+          <form action={logout} className="mt-1 text-sm text-text-inverse-muted">
+            Admin ·{' '}
+            <button type="submit" className="hover:underline">
+              Log out
+            </button>
+          </form>
         </div>
       </aside>
 
@@ -66,7 +73,15 @@ export function AdminShell({ children }: { children: ReactNode }) {
           <Brand />
           <span className="rounded-md bg-bg-subtle px-2 py-1 text-xs text-text-secondary">Admin</span>
         </div>
-        <span className="grid size-11 place-items-center rounded-full bg-bg-subtle text-sm font-bold">DK</span>
+        <form action={logout}>
+          <button
+            type="submit"
+            title="Log out"
+            className="grid size-11 place-items-center rounded-full bg-bg-subtle text-sm font-bold"
+          >
+            {initials(adminName)}
+          </button>
+        </form>
       </header>
 
       <main className="px-5 pb-28 pt-7 lg:ml-[240px] lg:px-12 lg:py-12">{children}</main>

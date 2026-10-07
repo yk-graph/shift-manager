@@ -1,27 +1,41 @@
-import type { ClockedIn, Employee } from '../_lib/types'
+'use client'
+
+import { useState } from 'react'
+import type { ClockedIn } from '@/lib/admin-types'
+import { ClockOutModal } from './clock-out-modal'
 import { Button, PageTitle, Pill } from './ui'
 
 export function Dashboard({
-  employees,
+  adminName,
+  today,
   clockedIn,
-  onClockOut,
+  hoursThisWeek,
 }: {
-  employees: Employee[]
+  adminName: string
+  today: string
   clockedIn: ClockedIn[]
-  onClockOut: (employeeId: number) => void
+  hoursThisWeek: string
 }) {
+  const [clockOutShift, setClockOutShift] = useState<ClockedIn | null>(null)
+
+  function handleSaveClockOut(shiftId: string) {
+    // Backend hook: close open shift and append a change-log entry.
+    void shiftId
+    setClockOutShift(null)
+  }
+
   return (
     <section className="mx-auto max-w-[1104px]">
-      <PageTitle title="Hi Daniel" subtitle="Saturday, October 3, 2026" />
+      <PageTitle title={`Hi ${adminName.split(' ')[0]}`} subtitle={today} />
 
       <div className="mt-5 grid grid-cols-2 gap-3 lg:mt-8 lg:gap-5">
         <div className="rounded-xl border border-border-default bg-bg-surface p-3 lg:p-7">
           <p className="text-sm text-text-secondary lg:text-base">On the clock now</p>
-          <p className="mt-2 text-2xl font-bold text-status-success lg:text-[40px]">7</p>
+          <p className="mt-2 text-2xl font-bold text-status-success lg:text-[40px]">{clockedIn.length}</p>
         </div>
         <div className="rounded-xl border border-border-default bg-bg-surface p-3 lg:p-7">
           <p className="text-sm text-text-secondary lg:text-base">Hours this week</p>
-          <p className="mt-2 text-2xl font-bold lg:text-[40px]">612h 40m</p>
+          <p className="mt-2 text-2xl font-bold lg:text-[40px]">{hoursThisWeek}</p>
         </div>
       </div>
 
@@ -42,55 +56,54 @@ export function Dashboard({
               </tr>
             </thead>
             <tbody>
-              {clockedIn.map((entry) => {
-                const employee = employees.find((item) => item.id === entry.employeeId)!
-                return (
-                  <tr key={entry.employeeId} className="border-b border-border-default last:border-b-0">
-                    <td className="py-6 font-bold">{employee.name}</td>
-                    <td className="py-6">{entry.branch}</td>
-                    <td className="py-6">{entry.since}</td>
-                    <td className="py-6">
-                      <Pill tone={entry.late ? 'amber' : 'green'}>{entry.duration}</Pill>
-                    </td>
-                    <td className="py-6 text-right">
-                      <Button variant="secondary" className="h-10 px-4" onClick={() => onClockOut(employee.id)}>
-                        Clock out
-                      </Button>
-                    </td>
-                  </tr>
-                )
-              })}
+              {clockedIn.map((entry) => (
+                <tr key={entry.shiftId} className="border-b border-border-default last:border-b-0">
+                  <td className="py-6 font-bold">{entry.employeeName}</td>
+                  <td className="py-6">{entry.branch}</td>
+                  <td className="py-6">{entry.since}</td>
+                  <td className="py-6">
+                    <Pill tone={entry.late ? 'amber' : 'green'}>{entry.duration}</Pill>
+                  </td>
+                  <td className="py-6 text-right">
+                    <Button variant="secondary" className="h-10 px-4" onClick={() => setClockOutShift(entry)}>
+                      Clock out
+                    </Button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
 
         <div className="mt-4 divide-y divide-border-default lg:hidden">
-          {clockedIn.map((entry) => {
-            const employee = employees.find((item) => item.id === entry.employeeId)!
-            return (
-              <article
-                key={entry.employeeId}
-                className="mx-4 mb-4 rounded-xl border border-border-default p-4 last:mb-0"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <h3 className="font-bold">{employee.name}</h3>
-                    <p className="mt-1 text-sm text-text-secondary">
-                      {entry.branch} · since {entry.since}
-                    </p>
-                  </div>
-                  <Button variant="secondary" className="h-9 px-3 text-sm" onClick={() => onClockOut(employee.id)}>
-                    Clock out
-                  </Button>
+          {clockedIn.map((entry) => (
+            <article key={entry.shiftId} className="mx-4 mb-4 rounded-xl border border-border-default p-4 last:mb-0">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <h3 className="font-bold">{entry.employeeName}</h3>
+                  <p className="mt-1 text-sm text-text-secondary">
+                    {entry.branch} · since {entry.since}
+                  </p>
                 </div>
-                <div className="mt-4">
-                  <Pill tone={entry.late ? 'amber' : 'green'}>{entry.duration}</Pill>
-                </div>
-              </article>
-            )
-          })}
+                <Button variant="secondary" className="h-9 px-3 text-sm" onClick={() => setClockOutShift(entry)}>
+                  Clock out
+                </Button>
+              </div>
+              <div className="mt-4">
+                <Pill tone={entry.late ? 'amber' : 'green'}>{entry.duration}</Pill>
+              </div>
+            </article>
+          ))}
         </div>
       </div>
+
+      {clockOutShift && (
+        <ClockOutModal
+          shift={clockOutShift}
+          onCancel={() => setClockOutShift(null)}
+          onSaveClockOut={handleSaveClockOut}
+        />
+      )}
     </section>
   )
 }
