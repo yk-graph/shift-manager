@@ -1,3 +1,6 @@
-export default function EmployeeLayout({ children }: { children: React.ReactNode }) {
+import { requireRole } from '@/lib/auth'
+
+export default async function EmployeeLayout({ children }: { children: React.ReactNode }) {
+  await requireRole('employee')
   return <>{children}</>
 }

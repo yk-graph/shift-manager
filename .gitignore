@@ -30,8 +30,11 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# .env file (.env.example is committed)
+# .env (temporarily committed)
+
+# prisma (created by `npx prisma generate`, runs automatically on npm install)
+/lib/generated/prisma
 
 # vercel
 .vercel
