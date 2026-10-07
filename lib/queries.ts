@@ -116,6 +116,18 @@ export async function getShiftsForEmployee(userId: string, start?: Date, end?: D
   })
 }
 
+// Every shift of every employee, newest first (for /admin/timesheets).
+export async function getAllShifts() {
+  return prisma.shift.findMany({
+    include: {
+      user: { select: { id: true, name: true } },
+      branch: true,
+      _count: { select: { changes: true } },
+    },
+    orderBy: { clockIn: 'desc' },
+  })
+}
+
 // One shift with its employee and full change history.
 export async function getShift(id: string) {
   return prisma.shift.findUnique({
