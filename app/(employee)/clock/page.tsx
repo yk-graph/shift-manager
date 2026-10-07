@@ -6,11 +6,11 @@ export default function ClockPage() {
   // State for tracking the currently selected work location ('gastown' | 'richmond')
   const [selectedLocation, setSelectedLocation] = useState('gastown')
 
-  // State for tracking whether the employee is currently clocked in (UI transition toggle)
+  // State for tracking whether the employee is currently clocked in
   const [isClockedIn, setIsClockedIn] = useState(false)
 
   return (
-    <div className="px-[56px] py-[44px] space-y-[28px]">
+    <div className="max-w-[1120px] mx-auto px-5 sm:px-[56px] py-6 sm:py-[44px] space-y-[28px]">
       {/* Header Greeting Section */}
       <div>
         <h1 className="text-h1 text-text-primary">Hi Maria</h1>
@@ -20,10 +20,10 @@ export default function ClockPage() {
       {/* Dashboard Grid Container */}
       <div className="grid grid-cols-1 lg:grid-cols-[724px_340px] gap-6 items-start">
         {/* Left Main Card: Clock Control Panel */}
-        <div className="bg-bg-surface border border-border-default rounded-2xl p-[28px_32px] shadow-sm space-y-6">
+        <div className="bg-bg-surface border border-border-default rounded-2xl p-6 sm:p-[28px_32px] shadow-sm space-y-6">
           {isClockedIn ? (
-            /* --- On-shift View (E-PC_03) --- */
-            <div className="space-y-6 text-center py-4">
+            /* --- On-shift View (E-PC_03 / E-MB_03) --- */
+            <div className="space-y-6 text-center py-2 sm:py-4">
               {/* Status Badge */}
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-green-100 text-green-700 text-xs font-semibold mx-auto">
                 <span className="w-2 h-2 rounded-full bg-green-600 animate-pulse"></span>
@@ -59,7 +59,7 @@ export default function ClockPage() {
               </p>
             </div>
           ) : (
-            /* --- Before Clock-in View (E-PC_02) --- */
+            /* --- Before Clock-in View (E-PC_02 / E-MB_02) --- */
             <div className="space-y-6">
               {/* Status Badge */}
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-stone-100 text-stone-600 text-xs font-medium">
@@ -70,8 +70,8 @@ export default function ClockPage() {
               {/* Prompt Question */}
               <h2 className="text-title-md text-text-primary">Where are you working today?</h2>
 
-              {/* Location Selection Options */}
-              <div className="space-y-3">
+              {/* Location Selection Options: Mobile 1-col, PC 2-cols */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {/* Gastown Option */}
                 <div
                   onClick={() => setSelectedLocation('gastown')}
@@ -86,7 +86,7 @@ export default function ClockPage() {
                     <p className="text-body-sm text-text-secondary">12 Water Street</p>
                   </div>
                   <div
-                    className={`w-5 h-5 rounded-full border flex items-center justify-center ${
+                    className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 ${
                       selectedLocation === 'gastown' ? 'border-orange-700 bg-orange-700' : 'border-stone-300'
                     }`}
                   >
@@ -108,7 +108,7 @@ export default function ClockPage() {
                     <p className="text-body-sm text-text-secondary">8800 No. 3 Road</p>
                   </div>
                   <div
-                    className={`w-5 h-5 rounded-full border flex items-center justify-center ${
+                    className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 ${
                       selectedLocation === 'richmond' ? 'border-orange-700 bg-orange-700' : 'border-stone-300'
                     }`}
                   >
@@ -142,7 +142,7 @@ export default function ClockPage() {
         </div>
 
         {/* Right Summary Card: Weekly Work Stats */}
-        <div className="bg-bg-surface border border-border-default rounded-2xl p-[28px_32px] shadow-sm space-y-4">
+        <div className="bg-bg-surface border border-border-default rounded-2xl p-6 sm:p-[28px_32px] shadow-sm space-y-4">
           <p className="text-caption text-text-secondary uppercase tracking-wider font-semibold">
             This week · Sep 28 – Oct 4
           </p>
