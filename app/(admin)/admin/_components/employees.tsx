@@ -2,14 +2,24 @@
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useActionState, useState } from 'react'
 import type { ClockedIn, Employee, Shift } from '@/lib/admin-types'
+import { createEmployeeAction, setEmployeeActiveAction } from '../actions'
 import { ClockOutModal } from './clock-out-modal'
 import { BackButton, Button, Field, PageTitle, Pill } from './ui'
 
-function onDeactivate(employeeId: string) {
-  // Backend hook: deactivate/reactivate employee, then refresh the page.
-  void employeeId
+// "Deactivate" / "Reactivate" button. Sends the opposite of the current status.
+function ToggleActiveButton({ employee, className = '' }: { employee: Employee; className?: string }) {
+  const isActive = employee.status === 'Active'
+  return (
+    <form action={setEmployeeActiveAction} className="inline-block">
+      <input type="hidden" name="employeeId" value={employee.id} />
+      <input type="hidden" name="isActive" value={isActive ? 'false' : 'true'} />
+      <Button type="submit" variant="secondary" className={className}>
+        {isActive ? 'Deactivate' : 'Reactivate'}
+      </Button>
+    </form>
+  )
 }
 
 export function Employees({ employees }: { employees: Employee[] }) {
@@ -64,9 +74,7 @@ export function Employees({ employees }: { employees: Employee[] }) {
                   <Link href={`/admin/employees/${employee.id}`} className="mr-4 text-sm text-text-secondary">
                     Details
                   </Link>
-                  <Button variant="secondary" className="h-9 px-4 text-sm" onClick={() => onDeactivate(employee.id)}>
-                    {employee.status === 'Active' ? 'Deactivate' : 'Reactivate'}
-                  </Button>
+                  <ToggleActiveButton employee={employee} className="h-9 px-4 text-sm" />
                 </td>
               </tr>
             ))}
@@ -88,9 +96,7 @@ export function Employees({ employees }: { employees: Employee[] }) {
               <Link href={`/admin/employees/${employee.id}`} className="text-sm text-text-secondary">
                 Details
               </Link>
-              <Button variant="secondary" className="h-9 px-4 text-sm" onClick={() => onDeactivate(employee.id)}>
-                {employee.status === 'Active' ? 'Deactivate' : 'Reactivate'}
-              </Button>
+              <ToggleActiveButton employee={employee} className="h-9 px-4 text-sm" />
             </div>
           </article>
         ))}
@@ -99,17 +105,26 @@ export function Employees({ employees }: { employees: Employee[] }) {
   )
 }
 
-export function AddEmployee({ onBack, onCreateEmployee }: { onBack: () => void; onCreateEmployee: () => void }) {
+export function AddEmployee() {
+  const router = useRouter()
+  const [state, formAction, pending] = useActionState(createEmployeeAction, {})
+  const onBack = () => router.push('/admin/employees')
+
   return (
     <section className="mx-auto max-w-[1104px]">
       <BackButton label="Employees" onClick={onBack} />
       <PageTitle title="Add employee" subtitle="They’ll log in with this email and password." />
 
-      <form className="mt-7 max-w-[640px] rounded-none border-0 bg-transparent lg:rounded-xl lg:border lg:border-border-default lg:bg-bg-surface lg:p-9">
-        <Field label="Full name" placeholder="e.g. Kenji Watanabe" />
-        <Field label="Email (login)" defaultValue="kenji@abcdumplings.ca" />
-        <Field label="Phone number (optional)" placeholder="(604) 555-0000" />
-        <Field label="Password" defaultValue="••••••••••" icon="eye" />
+      <form
+        action={formAction}
+        className="mt-7 max-w-[640px] rounded-none border-0 bg-transparent lg:rounded-xl lg:border lg:border-border-default lg:bg-bg-surface lg:p-9"
+      >
+        <Field label="Full name" name="name" required placeholder="e.g. Kenji Watanabe" />
+        <Field label="Email (login)" name="email" type="email" required placeholder="kenji@abcdumplings.ca" />
+        <Field label="Phone number (optional)" name="phone" placeholder="(604) 555-0000" />
+        <Field label="Password" name="password" required placeholder="At least 6 characters" icon="eye" />
+
+        {state.error && <p className="mt-3 text-sm text-red-600">{state.error}</p>}
 
         <p className="mt-3 text-sm text-text-secondary lg:hidden">
           Share it with them in person. They can change it in Account settings.
@@ -123,8 +138,8 @@ export function AddEmployee({ onBack, onCreateEmployee }: { onBack: () => void; 
           <Button variant="secondary" className="w-full lg:w-auto" onClick={onBack}>
             Cancel
           </Button>
-          <Button className="w-full lg:w-auto" onClick={onCreateEmployee}>
-            Create account
+          <Button type="submit" className="w-full lg:w-auto">
+            {pending ? 'Creating…' : 'Create account'}
           </Button>
         </div>
       </form>
@@ -148,12 +163,6 @@ export function EmployeeDetail({
   const router = useRouter()
   const [showClockOut, setShowClockOut] = useState(false)
 
-  function handleSaveClockOut(shiftId: string) {
-    // Backend hook: close open shift and append a change-log entry.
-    void shiftId
-    setShowClockOut(false)
-  }
-
   return (
     <section className="mx-auto max-w-[1104px]">
       <BackButton label="Employees" onClick={() => router.push('/admin/employees')} />
@@ -163,9 +172,7 @@ export function EmployeeDetail({
           subtitle={`${employee.email}${employee.phone ? ` · ${employee.phone}` : ''}`}
         />
         <div className="grid grid-cols-2 gap-3 lg:flex">
-          <Button variant="secondary" onClick={() => onDeactivate(employee.id)}>
-            {employee.status === 'Active' ? 'Deactivate' : 'Reactivate'}
-          </Button>
+          <ToggleActiveButton employee={employee} className="w-full" />
           {openShift && (
             <Button variant="dark" onClick={() => setShowClockOut(true)}>
               Clock out now
@@ -226,9 +233,7 @@ export function EmployeeDetail({
         </div>
       </div>
 
-      {showClockOut && openShift && (
-        <ClockOutModal shift={openShift} onCancel={() => setShowClockOut(false)} onSaveClockOut={handleSaveClockOut} />
-      )}
+      {showClockOut && openShift && <ClockOutModal shift={openShift} onClose={() => setShowClockOut(false)} />}
     </section>
   )
 }

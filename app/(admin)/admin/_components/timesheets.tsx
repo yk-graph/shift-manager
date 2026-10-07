@@ -2,7 +2,9 @@
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useActionState } from 'react'
 import type { ShiftToEdit, TimesheetDay } from '@/lib/admin-types'
+import { updateShiftAction, type ActionState } from '../actions'
 import { BackButton, BranchBadge, Button, Field, Icon, PageTitle } from './ui'
 
 const weekButtonClass =
@@ -121,17 +123,24 @@ export function Timesheets({
 export function EditShift({ shift }: { shift: ShiftToEdit }) {
   const router = useRouter()
 
-  function handleSaveShiftEdit() {
-    // Backend hook: save edited shift and append a change-log entry.
-    router.push('/admin/timesheets')
+  // Go back to the timesheets when the change was saved.
+  async function saveShift(prevState: ActionState, formData: FormData) {
+    const result = await updateShiftAction(prevState, formData)
+    if (!result.error) router.push('/admin/timesheets')
+    return result
   }
+
+  const [state, formAction, pending] = useActionState(saveShift, {})
 
   return (
     <section className="mx-auto max-w-[1104px]">
       <BackButton label="Timesheets" onClick={() => router.push('/admin/timesheets')} />
       <PageTitle title={shift.employeeName} subtitle={`${shift.dateLabel} · ${shift.branch}`} />
 
-      <form className="mt-7 max-w-[640px] rounded-none border-0 bg-transparent lg:rounded-xl lg:border lg:border-border-default lg:bg-bg-surface lg:p-9">
+      <form
+        action={formAction}
+        className="mt-7 max-w-[640px] rounded-none border-0 bg-transparent lg:rounded-xl lg:border lg:border-border-default lg:bg-bg-surface lg:p-9"
+      >
         <div className="mb-6 flex items-end justify-between rounded-lg bg-bg-subtle p-4">
           <div>
             <p className="text-sm text-text-secondary">Recorded</p>
@@ -140,11 +149,14 @@ export function EditShift({ shift }: { shift: ShiftToEdit }) {
           <p className="font-bold">{shift.duration}</p>
         </div>
 
+        <input type="hidden" name="shiftId" value={shift.id} />
+        <input type="hidden" name="day" value={shift.dayValue} />
+
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Clock-in time" defaultValue={shift.clockIn} />
-          <Field label="Clock-out time" defaultValue={shift.clockOut || '5:00 PM'} />
+          <Field label="Clock-in time" name="clockIn" type="time" required defaultValue={shift.clockInValue} />
+          <Field label="Clock-out time" name="clockOut" type="time" defaultValue={shift.clockOutValue || '17:00'} />
         </div>
-        <Field label="Reason (optional)" placeholder="Forgot to clock out" />
+        <Field label="Reason (optional)" name="reason" placeholder="Forgot to clock out" />
         <p className="-mt-2 text-sm text-text-secondary">Leave empty to use “Forgot to clock out.”</p>
 
         <div className="mt-5 flex gap-3 rounded-lg bg-status-warning-bg px-4 py-3 text-sm text-status-warning">
@@ -152,12 +164,14 @@ export function EditShift({ shift }: { shift: ShiftToEdit }) {
           <p>Saved to the change log with your name, the time, and the reason.</p>
         </div>
 
+        {state.error && <p className="mt-4 text-sm text-red-600">{state.error}</p>}
+
         <div className="mt-5 flex flex-col-reverse gap-3 lg:flex-row lg:justify-end">
           <Button variant="secondary" className="w-full lg:w-auto" onClick={() => router.push('/admin/timesheets')}>
             Cancel
           </Button>
-          <Button className="w-full lg:w-auto" onClick={handleSaveShiftEdit}>
-            Save changes
+          <Button type="submit" className="w-full lg:w-auto">
+            {pending ? 'Saving…' : 'Save changes'}
           </Button>
         </div>
       </form>

@@ -22,6 +22,7 @@ import {
   formatHours,
   formatLongDate,
   formatTime,
+  formatTimeInput,
   formatWeekRange,
   initials,
 } from '@/lib/format'
@@ -62,7 +63,9 @@ function toClockedIn(shift: DbShift): ClockedIn {
     employeeId: shift.user.id,
     employeeName: shift.user.name,
     day: formatDay(shift.clockIn),
+    dayValue: dayKey(shift.clockIn),
     clockInTime: formatTime(shift.clockIn),
+    clockInValue: formatTimeInput(shift.clockIn),
     since: late ? `${formatDay(shift.clockIn)} ${formatTime(shift.clockIn)}` : formatTime(shift.clockIn),
     duration: formatDuration(shift.clockIn, null),
     branch: shift.branch.name,
@@ -160,8 +163,9 @@ export async function getShiftToEdit(id: string) {
     branch: shift.branch.name,
     recorded: `${formatTime(shift.clockIn)} – ${recordedOut}`,
     duration: shift.clockOut ? formatDuration(shift.clockIn, shift.clockOut) : 'Open',
-    clockIn: formatTime(shift.clockIn),
-    clockOut: shift.clockOut ? formatTime(shift.clockOut) : '',
+    dayValue: dayKey(shift.clockIn),
+    clockInValue: formatTimeInput(shift.clockIn),
+    clockOutValue: shift.clockOut ? formatTimeInput(shift.clockOut) : '',
   }
   return result
 }
