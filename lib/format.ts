@@ -29,6 +29,11 @@ export function formatLongDate(date: Date) {
   })
 }
 
+// "17:05" — the value format of <input type="time">
+export function formatTimeInput(date: Date) {
+  return date.toLocaleTimeString('en-GB', { timeZone: TIMEZONE, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
+}
+
 // "2026-10-03" — handy to group shifts by day.
 export function dayKey(date: Date) {
   return date.toLocaleDateString('en-CA', { timeZone: TIMEZONE })
