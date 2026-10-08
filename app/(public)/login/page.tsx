@@ -40,7 +40,9 @@ export default function LoginPage() {
             <h2 className="text-[28px] lg:text-[32px] font-serif font-bold text-text-primary tracking-tight">
               Staff login
             </h2>
-            <p className="text-xs lg:text-sm text-text-secondary mt-1 font-normal">Use the email your manager gave you.</p>
+            <p className="text-xs lg:text-sm text-text-secondary mt-1 font-normal">
+              Use the email your manager gave you.
+            </p>
           </div>
 
           <form action={formAction} className="space-y-4">
