@@ -21,9 +21,11 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 ## Test accounts:
 
 # Admin account
+
 user: admin@abcdumplings.ca
 password: admin123
 
 # Employee account
+
 user: maria@abcdumplings.ca
 password: password123
