@@ -29,9 +29,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
-
-# .env file (.env.example is committed)
-# .env (temporarily committed)
+.env
 
 # prisma (created by `npx prisma generate`, runs automatically on npm install)
 /lib/generated/prisma
