@@ -1,6 +1,7 @@
 import Link from 'next/link'
+
+import { Icon, PageTitle } from '@/app/(admin)/admin/_components/ui'
 import { requireRole } from '@/lib/auth'
-import { PageTitle, Icon } from '../../../(admin)/admin/_components/ui'
 import PasswordForm from './password-form'
 
 export default async function AccountSettingsPage() {
@@ -12,7 +13,7 @@ export default async function AccountSettingsPage() {
   }
 
   return (
-    <div className="max-w-[1120px] mx-auto px-5 sm:px-[56px] pt-0 pb-0 space-y-[28px]">
+    <div className="max-w-280 mx-auto px-5 sm:px-14 pt-0 pb-0 space-y-7">
       <div>
         <Link
           href="/account"

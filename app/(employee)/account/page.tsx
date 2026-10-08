@@ -1,7 +1,8 @@
 import Link from 'next/link'
+
+import { Button, Icon, PageTitle } from '@/app/(admin)/admin/_components/ui'
 import { logout } from '@/app/(public)/login/actions'
 import { requireRole } from '@/lib/auth'
-import { Button, Icon, PageTitle } from '../../(admin)/admin/_components/ui'
 import { initials } from '@/lib/format'
 
 export default async function AccountPage() {
@@ -13,10 +14,10 @@ export default async function AccountPage() {
   }
 
   return (
-    <div className="max-w-[1120px] mx-auto px-5 sm:px-[56px] pt-0 pb-0 space-y-[28px]">
+    <div className="max-w-280 mx-auto px-5 sm:px-14 pt-0 pb-0 space-y-7">
       <PageTitle title="My account" />
 
-      <div className="max-w-[720px] rounded-2xl border border-border-default bg-bg-surface p-5 sm:p-8 lg:p-10 shadow-sm">
+      <div className="max-w-180 rounded-2xl border border-border-default bg-bg-surface p-5 sm:p-8 lg:p-10 shadow-sm">
         {/* Profile Header */}
         <div className="flex items-center gap-4 sm:gap-5 border-b border-border-default pb-6 sm:pb-8">
           <div className="grid size-16 sm:size-20 place-items-center rounded-full border border-brand-ember bg-orange-50 text-xl sm:text-2xl font-bold text-brand-ember">

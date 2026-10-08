@@ -1,4 +1,5 @@
 import Link from 'next/link'
+
 import { requireRole } from '@/lib/auth'
 import { describeChange, formatDay, formatDuration, formatHours, formatTime, formatWeekRange } from '@/lib/format'
 import { getShiftsForEmployee, getTotalHours, getWeekRange } from '@/lib/queries'
@@ -28,7 +29,7 @@ export default async function TimesheetPage({ searchParams }: { searchParams: Pr
   const isEmptyWeek = shifts.length === 0
 
   return (
-    <div className="px-5 sm:px-[56px] pt-0 pb-0 space-y-[28px]">
+    <div className="px-5 sm:px-14 pt-0 pb-0 space-y-7">
       {/* Top Header: Title and Date Range Pagination aligned in one row */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <h1 className="text-h1 text-text-primary">My timesheet</h1>
