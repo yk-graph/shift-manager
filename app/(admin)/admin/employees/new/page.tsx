@@ -1,3 +1,7 @@
-export default function AddEmployeePage() {
-  return <h1 className="text-h1">Add employee</h1>
+import { requireRole } from '@/lib/auth'
+import { AddEmployee } from '../../_components/employees'
+
+export default async function NewEmployeePage() {
+  await requireRole('admin')
+  return <AddEmployee />
 }

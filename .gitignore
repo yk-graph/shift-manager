@@ -29,9 +29,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+.env
 
-# env files (can opt-in for committing if needed)
-.env*
+# prisma (created by `npx prisma generate`, runs automatically on npm install)
+/lib/generated/prisma
 
 # vercel
 .vercel
