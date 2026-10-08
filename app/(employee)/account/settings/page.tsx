@@ -12,7 +12,7 @@ export default async function AccountSettingsPage() {
   }
 
   return (
-    <div className="max-w-[1120px] mx-auto px-5 sm:px-[56px] py-6 sm:py-[44px] space-y-[28px] pb-32 lg:pb-12">
+    <div className="max-w-[1120px] mx-auto px-5 sm:px-[56px] pt-0 pb-0 space-y-[28px]">
       <div>
         <Link
           href="/account"

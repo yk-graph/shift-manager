@@ -15,7 +15,7 @@ export default async function ClockPage() {
   const branchCount = new Set(weekShifts.map((shift) => shift.branchId)).size
 
   return (
-    <div className="max-w-[1120px] mx-auto px-5 sm:px-[56px] py-6 sm:py-[44px] space-y-[28px]">
+    <div className="max-w-[1120px] mx-auto px-5 sm:px-[56px] pt-0 pb-0 space-y-[28px]">
       {/* Header Greeting Section */}
       <div>
         <h1 className="text-h1 text-text-primary">Hi {user.name.split(' ')[0]}</h1>

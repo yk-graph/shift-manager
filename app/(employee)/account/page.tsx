@@ -13,7 +13,7 @@ export default async function AccountPage() {
   }
 
   return (
-    <div className="max-w-[1120px] mx-auto px-5 sm:px-[56px] py-6 sm:py-[44px] space-y-[28px] pb-24 lg:pb-12">
+    <div className="max-w-[1120px] mx-auto px-5 sm:px-[56px] pt-0 pb-0 space-y-[28px]">
       <PageTitle title="My account" />
 
       <div className="max-w-[720px] rounded-2xl border border-border-default bg-bg-surface p-5 sm:p-8 lg:p-10 shadow-sm">
