@@ -1,7 +1,7 @@
 import type { ReactNode, SVGProps } from 'react'
 
 export type IconName =
-  'dashboard' | 'employees' | 'calendar' | 'history' | 'arrowLeft' | 'plus' | 'eye' | 'clock' | 'lock'
+  'dashboard' | 'employees' | 'calendar' | 'history' | 'arrowLeft' | 'plus' | 'eye' | 'clock' | 'lock' | 'user'
 
 export function Icon({ name, className = '' }: { name: IconName; className?: string }) {
   const props: SVGProps<SVGSVGElement> = {
@@ -74,6 +74,12 @@ export function Icon({ name, className = '' }: { name: IconName; className?: str
       <>
         <rect x="5" y="11" width="14" height="10" rx="2" />
         <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+      </>
+    ),
+    user: (
+      <>
+        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+        <circle cx="12" cy="7" r="4" />
       </>
     ),
   }
