@@ -71,10 +71,10 @@ Open http://localhost:3000.
 
 ### Test accounts
 
-| Role     | Email                    | Password      |
-| -------- | ------------------------ | ------------- |
-| Admin    | admin@abcdumplings.ca    | admin123      |
-| Employee | maria@abcdumplings.ca    | password123   |
+| Role     | Email                 | Password    |
+| -------- | --------------------- | ----------- |
+| Admin    | admin@abcdumplings.ca | admin123    |
+| Employee | maria@abcdumplings.ca | password123 |
 
 ## Deployment
 
@@ -120,12 +120,12 @@ git push origin main   # triggers the Vercel deploy + the mirror Action
 
 ## Useful scripts
 
-| Command              | What it does                          |
-| -------------------- | ------------------------------------- |
-| `npm run dev`        | Start the dev server                  |
-| `npm run build`      | Production build                      |
-| `npm run db:migrate` | Apply Prisma migrations               |
-| `npm run db:seed`    | Seed sample data                      |
-| `npm run db:studio`  | Open Prisma Studio (browse the data)  |
-| `npm run lint`       | Run ESLint                            |
-| `npm run format`     | Format with Prettier                  |
+| Command              | What it does                         |
+| -------------------- | ------------------------------------ |
+| `npm run dev`        | Start the dev server                 |
+| `npm run build`      | Production build                     |
+| `npm run db:migrate` | Apply Prisma migrations              |
+| `npm run db:seed`    | Seed sample data                     |
+| `npm run db:studio`  | Open Prisma Studio (browse the data) |
+| `npm run lint`       | Run ESLint                           |
+| `npm run format`     | Format with Prettier                 |
