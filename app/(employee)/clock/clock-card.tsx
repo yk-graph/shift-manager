@@ -36,7 +36,6 @@ export default function ClockCard({ branches, openShift }: Props) {
   return (
     <div className="bg-bg-surface border border-border-default rounded-2xl p-6 sm:p-[28px_32px] shadow-sm space-y-6">
       {openShift ? (
-        /* --- On-shift View (E-PC_03 / E-MB_03) --- */
         <div className="space-y-6 text-center py-2 sm:py-4">
           {/* Status Badge */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-green-100 text-green-700 text-xs font-semibold mx-auto">
@@ -79,7 +78,6 @@ export default function ClockCard({ branches, openShift }: Props) {
           </p>
         </div>
       ) : (
-        /* --- Before Clock-in View (E-PC_02 / E-MB_02) --- */
         <div className="space-y-6">
           {/* Status Badge */}
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-stone-100 text-stone-600 text-xs font-medium">
@@ -90,7 +88,6 @@ export default function ClockCard({ branches, openShift }: Props) {
           {/* Prompt Question */}
           <h2 className="text-title-md text-text-primary">Where are you working today?</h2>
 
-          {/* Location Selection Options: Mobile 1-col, PC 2-cols */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {branches.map((branch) => {
               const isSelected = branch.id === selectedBranchId
