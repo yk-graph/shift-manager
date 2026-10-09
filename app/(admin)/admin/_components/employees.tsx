@@ -32,9 +32,21 @@ function ToggleActiveButton({ employee, className = '' }: { employee: Employee; 
   )
 }
 
+type EmployeeFilter = 'All' | 'Active' | 'Deactivated'
+
 export function Employees({ employees }: { employees: Employee[] }) {
+  const [filter, setFilter] = useState<EmployeeFilter>('All')
+
   const activeCount = employees.filter((employee) => employee.status === 'Active').length
   const deactivatedCount = employees.length - activeCount
+
+  const visibleEmployees = filter === 'All' ? employees : employees.filter((employee) => employee.status === filter)
+
+  const filterTabs: { label: EmployeeFilter; count: number }[] = [
+    { label: 'All', count: employees.length },
+    { label: 'Active', count: activeCount },
+    { label: 'Deactivated', count: deactivatedCount },
+  ]
 
   return (
     <section className="mx-auto max-w-276">
@@ -49,15 +61,23 @@ export function Employees({ employees }: { employees: Employee[] }) {
       </div>
 
       <div className="mt-4 flex gap-2">
-        <span className="rounded-full bg-bg-inverse px-4 py-2 text-sm font-bold text-text-on-brand">
-          All ({employees.length})
-        </span>
-        <span className="rounded-full border border-border-default bg-bg-surface px-4 py-2 text-sm font-bold text-text-secondary">
-          Active ({activeCount})
-        </span>
-        <span className="rounded-full border border-border-default bg-bg-surface px-4 py-2 text-sm font-bold text-text-secondary">
-          Deactivated ({deactivatedCount})
-        </span>
+        {filterTabs.map((tab) => {
+          const selected = filter === tab.label
+          return (
+            <button
+              key={tab.label}
+              type="button"
+              onClick={() => setFilter(tab.label)}
+              className={`rounded-full px-4 py-2 text-sm font-bold transition ${
+                selected
+                  ? 'bg-bg-inverse text-text-on-brand'
+                  : 'border border-border-default bg-bg-surface text-text-secondary'
+              }`}
+            >
+              {tab.label} ({tab.count})
+            </button>
+          )
+        })}
       </div>
 
       <div className="mt-6 hidden overflow-hidden rounded-xl border border-border-default bg-bg-surface lg:block">
@@ -72,7 +92,7 @@ export function Employees({ employees }: { employees: Employee[] }) {
             </tr>
           </thead>
           <tbody>
-            {employees.map((employee) => (
+            {visibleEmployees.map((employee) => (
               <tr key={employee.id} className="border-b border-border-default last:border-b-0">
                 <td className="px-6 py-5 font-bold">{employee.name}</td>
                 <td className="px-6 py-5">{employee.email}</td>
@@ -93,7 +113,7 @@ export function Employees({ employees }: { employees: Employee[] }) {
       </div>
 
       <div className="mt-5 space-y-4 lg:hidden">
-        {employees.map((employee) => (
+        {visibleEmployees.map((employee) => (
           <article key={employee.id} className="rounded-xl border border-border-default bg-bg-surface p-4">
             <div className="flex items-start justify-between gap-3">
               <div>
