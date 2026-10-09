@@ -39,19 +39,21 @@ async function main() {
   const employeePassword = await bcrypt.hash('password123', 10)
 
   const admin = await prisma.user.create({
-    data: { name: 'Alex Manager', email: 'admin@abcdumplings.ca', passwordHash: adminPassword, role: 'admin' },
+    data: { name: 'Jiaozi The Manager', email: 'admin@abcdumplings.ca', passwordHash: adminPassword, role: 'admin' },
   })
 
   const employees = await Promise.all(
     [
-      { name: 'Maria Lopez', email: 'maria@abcdumplings.ca', phone: '604-555-0101' },
-      { name: 'Kenji Tanaka', email: 'kenji@abcdumplings.ca', phone: '604-555-0102' },
-      { name: 'Priya Singh', email: 'priya@abcdumplings.ca', phone: '604-555-0103' },
+      { name: 'Ravioli Lopez', email: 'ravioli@abcdumplings.ca', phone: '604-555-0101' },
+      { name: 'Gyoza Tanaka', email: 'gyoza@abcdumplings.ca', phone: '604-555-0102' },
+      { name: 'Samosa Singh', email: 'samosa@abcdumplings.ca', phone: '604-555-0103' },
+      { name: 'Mandu Momo', email: 'mandu@abcdumplings.ca', phone: '604-555-0104' },
+      { name: 'Maria Wereniche', email: 'maria@abcdumplings.ca', phone: '604-555-0105' },
     ].map((employee) => prisma.user.create({ data: { ...employee, passwordHash: employeePassword } })),
   )
 
   await prisma.user.create({
-    data: { name: 'Old Employee', email: 'old@abcdumplings.ca', passwordHash: employeePassword, isActive: false },
+    data: { name: 'John Potsticker', email: 'john@abcdumplings.ca', passwordHash: employeePassword, isActive: false },
   })
 
   console.log('Creating shifts for the last 2 weeks...')
@@ -70,7 +72,7 @@ async function main() {
     }
   }
 
-  // Maria is clocked in right now (started 1 hour ago).
+  // Ravioli is clocked in right now (started 1 hour ago).
   await prisma.shift.create({
     data: { userId: employees[0].id, branchId: gastown.id, clockIn: new Date(Date.now() - 60 * 60 * 1000) },
   })
