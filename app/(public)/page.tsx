@@ -75,12 +75,12 @@ export default function HomePage() {
             <div className="bg-bg-surface text-text-primary p-6 rounded-xl shadow-md border border-border-default">
               <h3 className="font-serif font-bold text-lg sm:text-xl mb-2">ABC Dumplings — Gastown</h3>
               <p className="text-text-secondary text-sm mb-4">12 Water Street, Vancouver</p>
-              <p className="text-xs text-status-warning font-semibold">Open daily · 8:00 AM – 5:00 PM</p>
+              <p className="text-xs text-status-warning font-semibold">Open daily · 8:00 AM – 9:00 PM</p>
             </div>
             <div className="bg-bg-surface text-text-primary p-6 rounded-xl shadow-md border border-border-default">
               <h3 className="font-serif font-bold text-lg sm:text-xl mb-2">ABC Dumplings — Richmond</h3>
               <p className="text-text-secondary text-sm mb-4">8800 No. 3 Road, Richmond</p>
-              <p className="text-xs text-status-warning font-semibold">Open daily · 8:00 AM – 5:00 PM</p>
+              <p className="text-xs text-status-warning font-semibold">Open daily · 8:00 AM – 9:00 PM</p>
             </div>
           </div>
         </div>

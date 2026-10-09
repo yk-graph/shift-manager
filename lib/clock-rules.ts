@@ -3,7 +3,7 @@
 // No database code in this file, so client components can import it too.
 
 export const EARLIEST_CLOCK_IN_HOUR = 8 // 8:00 AM
-export const LATEST_CLOCK_OUT_HOUR = 23 // 11:00 PM
+export const LATEST_CLOCK_OUT_HOUR = 21 // 9:00 PM
 
 // 17 → "5:00 PM"
 export function formatHour(hour: number) {

@@ -154,7 +154,7 @@ export function EditShift({ shift }: { shift: ShiftToEdit }) {
 
         <div className="grid grid-cols-2 gap-3">
           <Field label="Clock-in time" name="clockIn" type="time" required defaultValue={shift.clockInValue} />
-          <Field label="Clock-out time" name="clockOut" type="time" defaultValue={shift.clockOutValue || '17:00'} />
+          <Field label="Clock-out time" name="clockOut" type="time" defaultValue={shift.clockOutValue || '21:00'} />
         </div>
         <Field label="Reason (optional)" name="reason" placeholder="Forgot to clock out" />
         <p className="-mt-2 text-sm text-text-secondary">Leave empty to use “Forgot to clock out.”</p>
