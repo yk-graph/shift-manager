@@ -30,7 +30,6 @@ export default async function TimesheetPage({ searchParams }: { searchParams: Pr
 
   return (
     <div className="px-5 sm:px-14 pt-0 pb-0 space-y-7">
-      {/* Top Header: Title and Date Range Pagination aligned in one row */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <h1 className="text-h1 text-text-primary">My timesheet</h1>
         <div className="flex items-center gap-3 bg-bg-surface border border-border-default rounded-xl px-3 py-1.5 shadow-sm w-fit">
@@ -85,17 +84,14 @@ export default async function TimesheetPage({ searchParams }: { searchParams: Pr
         </div>
       ) : (
         <>
-          {/* --- Mobile View: Figma-matching Card List (E-MB_04) --- */}
           <div className="block sm:hidden space-y-3">
             {shifts.map((shift) => (
               <div
                 key={shift.id}
                 className="bg-bg-surface border border-border-default rounded-2xl p-[14px_16px] shadow-sm space-y-1.5"
               >
-                {/* Top Row: Day */}
                 <span className="text-body font-semibold text-text-primary block">{shift.day}</span>
 
-                {/* Bottom Row: Left (Time & Branch stacked) and Right (Duration aligned to bottom) */}
                 <div className="flex items-end justify-between">
                   <div className="space-y-0.5">
                     <span className="text-body-sm text-text-secondary block">
@@ -106,7 +102,6 @@ export default async function TimesheetPage({ searchParams }: { searchParams: Pr
                   <span className="text-body-sm font-semibold text-text-primary">{shift.duration}</span>
                 </div>
 
-                {/* Admin Note if exists */}
                 {shift.notes && (
                   <div className="pt-2 mt-1 border-t border-border-default">
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-amber-100 text-amber-800 text-xs font-medium">
@@ -118,7 +113,6 @@ export default async function TimesheetPage({ searchParams }: { searchParams: Pr
             ))}
           </div>
 
-          {/* --- PC View: Table (E-PC_04) --- */}
           <div className="hidden sm:block bg-bg-surface border border-border-default rounded-2xl overflow-hidden shadow-sm">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
