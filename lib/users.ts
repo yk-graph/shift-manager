@@ -35,6 +35,13 @@ export async function createEmployee(data: { name: string; email: string; phone:
 // Admin only: deactivate (false) or reactivate (true) an employee.
 // Deactivated employees can't log in, but their shifts stay in the database.
 export async function setEmployeeActive(userId: string, isActive: boolean) {
+  if (!isActive) {
+    const openShift = await prisma.shift.findFirst({ where: { userId, clockOut: null } })
+    if (openShift) {
+      throw new Error('Cannot deactivate an employee who is currently clocked in.')
+    }
+  }
+
   return prisma.user.update({
     where: { id: userId, role: 'employee' },
     data: { isActive },

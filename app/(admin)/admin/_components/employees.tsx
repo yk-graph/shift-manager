@@ -2,7 +2,8 @@
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useActionState, useState } from 'react'
+import { useActionState, useState, type SubmitEvent } from 'react'
+
 import type { ClockedIn, Employee, Shift } from '@/lib/admin-types'
 import { createEmployeeAction, setEmployeeActiveAction } from '../actions'
 import { ClockOutModal } from './clock-out-modal'
@@ -11,8 +12,17 @@ import { BackButton, Button, Field, PageTitle, Pill } from './ui'
 // "Deactivate" / "Reactivate" button. Sends the opposite of the current status.
 function ToggleActiveButton({ employee, className = '' }: { employee: Employee; className?: string }) {
   const isActive = employee.status === 'Active'
+
+  function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
+    if (isActive && employee.isClockedIn) {
+      event.preventDefault()
+
+      alert('This employee is currently clocked in. Please clock them out before deactivating.')
+    }
+  }
+
   return (
-    <form action={setEmployeeActiveAction} className="inline-block">
+    <form action={setEmployeeActiveAction} onSubmit={handleSubmit} className="inline-block">
       <input type="hidden" name="employeeId" value={employee.id} />
       <input type="hidden" name="isActive" value={isActive ? 'false' : 'true'} />
       <Button type="submit" variant="secondary" className={className}>
@@ -27,7 +37,7 @@ export function Employees({ employees }: { employees: Employee[] }) {
   const deactivatedCount = employees.length - activeCount
 
   return (
-    <section className="mx-auto max-w-[1104px]">
+    <section className="mx-auto max-w-276">
       <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
         <PageTitle title="Employees" subtitle={`${employees.length} people · ${activeCount} active`} />
         <Link
@@ -111,13 +121,13 @@ export function AddEmployee() {
   const onBack = () => router.push('/admin/employees')
 
   return (
-    <section className="mx-auto max-w-[1104px]">
+    <section className="mx-auto max-w-276">
       <BackButton label="Employees" onClick={onBack} />
       <PageTitle title="Add employee" subtitle="They’ll log in with this email and password." />
 
       <form
         action={formAction}
-        className="mt-7 max-w-[640px] rounded-none border-0 bg-transparent lg:rounded-xl lg:border lg:border-border-default lg:bg-bg-surface lg:p-9"
+        className="mt-7 max-w-160 rounded-none border-0 bg-transparent lg:rounded-xl lg:border lg:border-border-default lg:bg-bg-surface lg:p-9"
       >
         <Field label="Full name" name="name" required placeholder="e.g. Kenji Watanabe" />
         <Field label="Email (login)" name="email" type="email" required placeholder="kenji@abcdumplings.ca" />
@@ -164,7 +174,7 @@ export function EmployeeDetail({
   const [showClockOut, setShowClockOut] = useState(false)
 
   return (
-    <section className="mx-auto max-w-[1104px]">
+    <section className="mx-auto max-w-276">
       <BackButton label="Employees" onClick={() => router.push('/admin/employees')} />
       <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
         <PageTitle

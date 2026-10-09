@@ -72,6 +72,10 @@ export async function setEmployeeActiveAction(formData: FormData) {
   const employeeId = String(formData.get('employeeId'))
   const isActive = formData.get('isActive') === 'true'
 
-  await setEmployeeActive(employeeId, isActive)
+  try {
+    await setEmployeeActive(employeeId, isActive)
+  } catch {
+    return
+  }
   revalidatePath('/admin', 'layout')
 }

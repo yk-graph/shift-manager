@@ -9,6 +9,7 @@ export type Employee = {
   email: string
   phone?: string
   status: EmployeeStatus
+  isClockedIn: boolean
 }
 
 export type ClockedIn = {
