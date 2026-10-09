@@ -73,7 +73,10 @@ function toClockedIn(shift: DbShift): ClockedIn {
   }
 }
 
-function toEmployee(user: { id: string; name: string; email: string; phone: string | null; isActive: boolean }) {
+function toEmployee(
+  user: { id: string; name: string; email: string; phone: string | null; isActive: boolean },
+  isClockedIn: boolean,
+) {
   const employee: Employee = {
     id: user.id,
     name: user.name,
@@ -81,6 +84,7 @@ function toEmployee(user: { id: string; name: string; email: string; phone: stri
     email: user.email,
     phone: user.phone ?? undefined,
     status: user.isActive ? 'Active' : 'Deactivated',
+    isClockedIn,
   }
   return employee
 }
@@ -99,8 +103,9 @@ export async function getDashboardData() {
 
 // /admin/employees
 export async function getEmployeeList() {
-  const users = await getEmployees()
-  return users.map(toEmployee)
+  const [users, openShifts] = await Promise.all([getEmployees(), getClockedInNow()])
+  const clockedInIds = new Set(openShifts.map((shift) => shift.user.id))
+  return users.map((user) => toEmployee(user, clockedInIds.has(user.id)))
 }
 
 // /admin/employees/[id] — null if there is no employee with that id.
@@ -114,7 +119,7 @@ export async function getEmployeeDetailData(id: string) {
   const openShift = await getOpenShift(id)
 
   return {
-    employee: toEmployee(user),
+    employee: toEmployee(user, openShift != null),
     shifts: shifts.map((shift) => toShift({ ...shift, user })),
     weekLabel: formatWeekRange(start, end),
     total: formatHours(totalHours),

@@ -78,12 +78,6 @@ export default function LoginPage() {
               {pending ? 'Logging in…' : 'Log in'}
             </button>
           </form>
-
-          <div className="text-center pt-1">
-            <a href="#" className="text-xs text-text-secondary hover:underline font-normal">
-              Forgot your password? Ask your manager to reset it.
-            </a>
-          </div>
         </div>
 
         <div></div>
