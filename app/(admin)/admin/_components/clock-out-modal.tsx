@@ -26,7 +26,7 @@ export function ClockOutModal({ shift, onClose }: { shift: ClockedIn; onClose: (
         <input type="hidden" name="clockIn" value={shift.clockInValue} />
 
         <div className="mt-5">
-          <Field label="Clock-out time" name="clockOut" type="time" required defaultValue="17:00" />
+          <Field label="Clock-out time" name="clockOut" type="time" required defaultValue="21:00" />
           <Field label="Reason (optional)" name="reason" placeholder="Forgot to clock out" />
           <p className="-mt-2 text-sm text-text-secondary lg:hidden">Leave empty to use “Forgot to clock out.”</p>
           <div className="mt-5 rounded-lg bg-status-warning-bg px-4 py-3 text-sm text-status-warning lg:hidden">
