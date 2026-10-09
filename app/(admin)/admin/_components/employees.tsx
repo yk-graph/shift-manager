@@ -68,7 +68,7 @@ export function Employees({ employees }: { employees: Employee[] }) {
               key={tab.label}
               type="button"
               onClick={() => setFilter(tab.label)}
-              className={`rounded-full px-4 py-2 text-sm font-bold transition ${
+              className={`rounded-full px-4 py-2 text-sm cursor-pointer font-bold transition ${
                 selected
                   ? 'bg-bg-inverse text-text-on-brand'
                   : 'border border-border-default bg-bg-surface text-text-secondary'
