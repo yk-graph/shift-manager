@@ -46,7 +46,7 @@ export default function ClockCard({ branches, openShift }: Props) {
 
           {/* Timer & Subtitle */}
           <div className="space-y-1">
-            <p className="text-timer text-text-primary tracking-tight">
+            <p className="text-4xl sm:text-timer text-text-primary tracking-tight font-bold">
               {now ? formatTimer(now - new Date(openShift.clockIn).getTime()) : '--:--:--'}
             </p>
             <p className="text-body-sm text-text-secondary">Since {openShift.since}</p>
