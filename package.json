@@ -12,7 +12,9 @@
     "format:check": "prettier --check ."
   },
   "devDependencies": {
-    "prettier": "^3.9.9",
-    "turbo": "^2.11.7"
+    "turbo": "catalog:",
+    "typescript": "catalog:",
+    "eslint": "catalog:",
+    "prettier": "catalog:"
   }
 }
