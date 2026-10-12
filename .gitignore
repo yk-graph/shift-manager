@@ -34,8 +34,8 @@ yarn-error.log*
 .pnpm-debug.log*
 .env
 
-# prisma (created by `prisma generate`, runs automatically on install)
-**/lib/generated/
+# prisma (generated client output)
+**/src/generated/
 
 # vercel
 .vercel
