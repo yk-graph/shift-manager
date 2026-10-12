@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "packageManager": "pnpm@12.11.2",
+  "prettier": "@shift-manager/prettier-config",
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
@@ -12,6 +13,7 @@
     "format:check": "prettier --check ."
   },
   "devDependencies": {
+    "@shift-manager/prettier-config": "workspace:*",
     "turbo": "catalog:",
     "typescript": "catalog:",
     "eslint": "catalog:",
