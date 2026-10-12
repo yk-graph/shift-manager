@@ -7,15 +7,9 @@
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit",
-    "postinstall": "prisma generate",
-    "db:migrate": "prisma migrate dev",
-    "db:seed": "prisma db seed",
-    "db:studio": "prisma studio"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^7.10.0",
-    "@prisma/client": "^7.10.0",
     "bcryptjs": "^3.0.3",
     "next": "16.3.8",
     "react": "catalog:",
@@ -29,13 +23,10 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "dotenv": "^18.0.6",
     "eslint": "catalog:",
     "eslint-config-next": "16.3.8",
     "eslint-config-prettier": "catalog:",
-    "prisma": "^7.10.0",
     "tailwindcss": "^4",
-    "tsx": "^4.23.15",
     "typescript": "catalog:"
   }
 }
