@@ -1,0 +1,14 @@
+{
+  "name": "@shift-manager/eslint-config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "dependencies": {
+    "eslint": "catalog:",
+    "@eslint/js": "catalog:",
+    "typescript-eslint": "catalog:",
+    "eslint-config-prettier": "catalog:"
+  }
+}
