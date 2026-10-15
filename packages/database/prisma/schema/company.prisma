@@ -24,7 +24,7 @@ model Store {
   companyId String
   name      String
   address   String
-  timeZone  String   @default("Asia/Tokyo")
+  timeZone  String   @default("America/Vancouver")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
