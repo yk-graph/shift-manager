@@ -19,3 +19,5 @@ This package uses Prisma ORM 7 (`prisma` and `@prisma/client` 7.x) with MySQL th
 - Schema files live in `prisma/schema/`, split by domain. The generated client goes to `src/generated` (gitignored).
 - Local development uses `pnpm db:push`. Migration files are created only when the first deployment is ready.
 - Company-owned tables carry `companyId`. Keep tenant isolation in mind for every query.
+- Naming: table names are plural `snake_case` via `@@map` (e.g. `platform_admins`); column names stay `camelCase` without `@map`. Ids use `cuid()`.
+- The default store time zone is `America/Vancouver`. All timestamps are stored in UTC.
