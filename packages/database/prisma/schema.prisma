@@ -15,8 +15,8 @@ enum Role {
 model Company {
   id        String   @id @default(uuid()) @db.Char(36)
   name      String
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   stores Store[]
   users  User[]
@@ -26,11 +26,11 @@ model Company {
 
 model Store {
   id        String   @id @default(uuid()) @db.Char(36)
-  companyId String   @map("company_id") @db.Char(36)
+  companyId String   @db.Char(36)
   name      String
   address   String
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   company Company @relation(fields: [companyId], references: [id])
 
@@ -40,16 +40,16 @@ model Store {
 
 model User {
   id              String    @id @default(uuid()) @db.Char(36)
-  companyId       String    @map("company_id") @db.Char(36)
+  companyId       String    @db.Char(36)
   name            String
   email           String    @unique
   phone           String?
-  passwordHash    String    @map("password_hash")
+  passwordHash    String
   role            Role      @default(employee)
-  isActive        Boolean   @default(true) @map("is_active")
-  emailVerifiedAt DateTime? @map("email_verified_at")
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime  @updatedAt @map("updated_at")
+  isActive        Boolean   @default(true)
+  emailVerifiedAt DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   company Company @relation(fields: [companyId], references: [id])
 
