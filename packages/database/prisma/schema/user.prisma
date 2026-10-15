@@ -1,0 +1,41 @@
+enum Role {
+  admin
+  employee
+}
+
+model User {
+  id              String    @id @default(cuid())
+  companyId       String
+  name            String
+  email           String    @unique
+  phone           String?
+  passwordHash    String
+  role            Role      @default(employee)
+  isActive        Boolean   @default(true)
+  emailVerifiedAt DateTime?
+  lastLoginAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  company            Company             @relation(fields: [companyId], references: [id])
+  stores             UserStore[]
+  sessions           Session[]
+  emailVerifications EmailVerification[]
+  invitationsSent    Invitation[]
+
+  @@index([companyId])
+  @@map("users")
+}
+
+model UserStore {
+  userId    String
+  storeId   String
+  createdAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@id([userId, storeId])
+  @@index([storeId])
+  @@map("user_stores")
+}
