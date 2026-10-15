@@ -1,0 +1,28 @@
+model PlatformAdmin {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  sessions PlatformAdminSession[]
+
+  @@map("platform_admins")
+}
+
+model PlatformAdminSession {
+  id              String   @id @default(cuid())
+  platformAdminId String
+  tokenHash       String   @unique @db.Char(64)
+  expiresAt       DateTime
+  lastUsedAt      DateTime @default(now())
+  createdAt       DateTime @default(now())
+
+  platformAdmin PlatformAdmin @relation(fields: [platformAdminId], references: [id], onDelete: Cascade)
+
+  @@index([platformAdminId])
+  @@index([expiresAt])
+  @@map("platform_admin_sessions")
+}

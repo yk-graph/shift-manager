@@ -1,0 +1,33 @@
+enum CompanyStatus {
+  active
+  suspended
+}
+
+model Company {
+  id        String        @id @default(cuid())
+  name      String
+  status    CompanyStatus @default(active)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  stores      Store[]
+  users       User[]
+  invitations Invitation[]
+
+  @@map("companies")
+}
+
+model Store {
+  id        String   @id @default(cuid())
+  companyId String
+  name      String
+  address   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  company Company     @relation(fields: [companyId], references: [id])
+  users   UserStore[]
+
+  @@unique([companyId, name])
+  @@map("stores")
+}
