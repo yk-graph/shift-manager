@@ -1,0 +1,85 @@
+enum ShiftStatus {
+  draft
+  published
+}
+
+model Shift {
+  id          String      @id @default(cuid())
+  companyId   String
+  storeId     String
+  userId      String
+  startsAt    DateTime
+  endsAt      DateTime
+  status      ShiftStatus @default(draft)
+  note        String?
+  createdById String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  company     Company     @relation(fields: [companyId], references: [id])
+  store       Store       @relation(fields: [storeId], references: [id])
+  user        User        @relation("ShiftUser", fields: [userId], references: [id])
+  createdBy   User        @relation("ShiftCreator", fields: [createdById], references: [id])
+  timeEntries TimeEntry[]
+
+  @@index([companyId, startsAt])
+  @@index([storeId, startsAt])
+  @@index([userId, startsAt])
+  @@map("shifts")
+}
+
+model TimeEntry {
+  id         String    @id @default(cuid())
+  companyId  String
+  storeId    String
+  userId     String
+  shiftId    String?
+  clockInAt  DateTime
+  clockOutAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  company Company           @relation(fields: [companyId], references: [id])
+  store   Store             @relation(fields: [storeId], references: [id])
+  user    User              @relation(fields: [userId], references: [id])
+  shift   Shift?            @relation(fields: [shiftId], references: [id], onDelete: SetNull)
+  breaks  TimeBreak[]
+  changes TimeEntryChange[]
+
+  @@index([companyId, clockInAt])
+  @@index([storeId, clockInAt])
+  @@index([userId, clockInAt])
+  @@index([shiftId])
+  @@map("time_entries")
+}
+
+model TimeBreak {
+  id          String    @id @default(cuid())
+  timeEntryId String
+  startedAt   DateTime
+  endedAt     DateTime?
+
+  timeEntry TimeEntry @relation(fields: [timeEntryId], references: [id], onDelete: Cascade)
+
+  @@index([timeEntryId])
+  @@map("time_breaks")
+}
+
+model TimeEntryChange {
+  id            String    @id @default(cuid())
+  timeEntryId   String
+  changedById   String
+  oldClockInAt  DateTime
+  oldClockOutAt DateTime?
+  newClockInAt  DateTime
+  newClockOutAt DateTime?
+  reason        String
+  createdAt     DateTime  @default(now())
+
+  timeEntry TimeEntry @relation(fields: [timeEntryId], references: [id], onDelete: Cascade)
+  changedBy User      @relation(fields: [changedById], references: [id])
+
+  @@index([timeEntryId])
+  @@index([changedById])
+  @@map("time_entry_changes")
+}

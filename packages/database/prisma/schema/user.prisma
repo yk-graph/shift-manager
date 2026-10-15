@@ -22,6 +22,10 @@ model User {
   sessions           Session[]
   emailVerifications EmailVerification[]
   invitationsSent    Invitation[]
+  shifts             Shift[]             @relation("ShiftUser")
+  shiftsCreated      Shift[]             @relation("ShiftCreator")
+  timeEntries        TimeEntry[]
+  timeEntryChanges   TimeEntryChange[]
 
   @@index([companyId])
   @@map("users")

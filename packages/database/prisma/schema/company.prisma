@@ -13,6 +13,8 @@ model Company {
   stores      Store[]
   users       User[]
   invitations Invitation[]
+  shifts      Shift[]
+  timeEntries TimeEntry[]
 
   @@map("companies")
 }
@@ -22,11 +24,14 @@ model Store {
   companyId String
   name      String
   address   String
+  timeZone  String   @default("Asia/Tokyo")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  company Company     @relation(fields: [companyId], references: [id])
-  users   UserStore[]
+  company     Company     @relation(fields: [companyId], references: [id])
+  users       UserStore[]
+  shifts      Shift[]
+  timeEntries TimeEntry[]
 
   @@unique([companyId, name])
   @@map("stores")
