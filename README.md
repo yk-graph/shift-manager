@@ -15,66 +15,68 @@ Employees clock in and out; admins see who is working and review weekly hours.
 ## Tech stack
 
 - **Next.js 16** (App Router) + **React 19**
-- **PostgreSQL** (Neon) via **Prisma 7**
+- **MySQL 8.4** via **Prisma 7** (`@prisma/adapter-mariadb`)
 - Cookie sessions with **bcryptjs** password hashing
 - **Tailwind CSS 4**
-- Deployed on **Vercel**
+- **pnpm** workspaces + **Turborepo**
 
 ## Getting started (local)
 
 ### Prerequisites
 
 - Node.js 20+
-- A PostgreSQL database — a free [Neon](https://neon.tech) project is easiest (or any local Postgres)
+- pnpm
+- Docker (MySQL runs in a container)
 
 ### 1. Clone and install
 
 ```bash
 git clone <this-repo-url>
-cd project_10_time-sheet-management
-npm install
+cd shift-manager
+pnpm install
 ```
-
-`npm install` runs `prisma generate` automatically.
 
 ### 2. Set up environment variables
 
-Copy the example file and fill in your database connection strings:
-
 ```bash
-cp .env.example .env
+cp .env.example .env                                         # MySQL credentials for Docker Compose
+cp packages/database/.env.example packages/database/.env    # DATABASE_URL for Prisma
 ```
 
+Keep the user and password in `packages/database/.env` in sync with the root `.env`.
+
+### 3. Start MySQL
+
 ```bash
-# .env
-DATABASE_URL=         # direct connection — used for migrations
-DATABASE_URL_POOLED=  # pooled connection — used by the app at runtime
+docker compose -f docker-compose.dev.yml up -d
 ```
 
-Both come from your Neon project (Dashboard → Connection string). For a local
-Postgres, you can set both to the same `postgresql://...` URL.
+MySQL listens on `127.0.0.1:4329`.
 
-### 3. Create the schema and seed data
+### 4. Create the schema and seed data
 
 ```bash
-npm run db:migrate   # apply migrations
-npm run db:seed      # insert sample admin, employees, branches, shifts
+pnpm --filter @shift-manager/database db:push   # apply the schema and generate the client
+pnpm --filter @shift-manager/database db:seed   # insert sample company, users, shifts
 ```
 
-### 4. Run the app
+### 5. Run the app
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 Open http://localhost:4320.
 
 ### Test accounts
 
-| Role     | Email                 | Password    |
-| -------- | --------------------- | ----------- |
-| Admin    | admin@abcdumplings.ca | admin123    |
-| Employee | maria@abcdumplings.ca | password123 |
+All seeded accounts use the password `password123`.
+
+| Role           | Email                      |
+| -------------- | -------------------------- |
+| Platform admin | platform-admin@example.com |
+| Company admin  | admin@abc-company.test     |
+| Employee       | taro@abc-company.test      |
 
 ## Deployment
 
@@ -120,12 +122,13 @@ git push origin main   # triggers the Vercel deploy + the mirror Action
 
 ## Useful scripts
 
-| Command              | What it does                         |
-| -------------------- | ------------------------------------ |
-| `npm run dev`        | Start the dev server                 |
-| `npm run build`      | Production build                     |
-| `npm run db:migrate` | Apply Prisma migrations              |
-| `npm run db:seed`    | Seed sample data                     |
-| `npm run db:studio`  | Open Prisma Studio (browse the data) |
-| `npm run lint`       | Run ESLint                           |
-| `npm run format`     | Format with Prettier                 |
+| Command                                           | What it does                         |
+| ------------------------------------------------- | ------------------------------------ |
+| `pnpm dev`                                        | Start the dev server                 |
+| `pnpm build`                                      | Production build                     |
+| `pnpm lint`                                       | Run ESLint                           |
+| `pnpm typecheck`                                  | Run TypeScript checks                |
+| `pnpm format`                                     | Format with Prettier                 |
+| `pnpm --filter @shift-manager/database db:push`   | Apply the schema to the database     |
+| `pnpm --filter @shift-manager/database db:seed`   | Seed sample data                     |
+| `pnpm --filter @shift-manager/database db:studio` | Open Prisma Studio (browse the data) |
