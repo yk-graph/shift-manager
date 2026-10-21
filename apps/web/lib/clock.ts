@@ -1,5 +1,5 @@
 import { CLOCK_IN_OPENS, CLOCK_OUT_CLOSES, EARLIEST_CLOCK_IN_HOUR, LATEST_CLOCK_OUT_HOUR } from '@/lib/clock-rules'
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@shift-manager/database'
 import { vancouverHour } from '@/lib/time'
 
 // These functions throw an Error with a friendly message when a rule is broken.

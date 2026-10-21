@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@shift-manager/database'
 import { TIMEZONE } from '@/lib/time'
 
 // Read-only queries used by the pages.
