@@ -67,7 +67,7 @@ npm run db:seed      # insert sample admin, employees, branches, shifts
 npm run dev
 ```
 
-Open http://localhost:3000.
+Open http://localhost:4320.
 
 ### Test accounts
 
