@@ -17,9 +17,9 @@ Each package has its own `AGENTS.md` listing the technologies it uses and where 
 
 ## Root-level technologies
 
-| Area                                    | Where to read                                        |
-| --------------------------------------- | ---------------------------------------------------- |
-| pnpm workspaces, catalog, `allowBuilds` | https://pnpm.io/workspaces, https://pnpm.io/catalogs |
-| Docker Compose (`compose.dev.yaml`)     | https://docs.docker.com/compose/                     |
-| MySQL 8.4 (Docker image `mysql:8.4`)    | https://dev.mysql.com/doc/refman/8.4/en/             |
-| Prettier                                | https://prettier.io/docs/                            |
+| Area                                      | Where to read                                        |
+| ----------------------------------------- | ---------------------------------------------------- |
+| pnpm workspaces, catalog, `allowBuilds`   | https://pnpm.io/workspaces, https://pnpm.io/catalogs |
+| Docker Compose (`docker-compose.dev.yml`) | https://docs.docker.com/compose/                     |
+| MySQL 8.4 (Docker image `mysql:8.4`)      | https://dev.mysql.com/doc/refman/8.4/en/             |
+| Prettier                                  | https://prettier.io/docs/                            |
