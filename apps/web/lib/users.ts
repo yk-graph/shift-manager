@@ -1,5 +1,5 @@
 import { checkPassword, hashPassword } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@shift-manager/database'
 
 // These functions throw an Error with a friendly message when something is wrong.
 // Server actions catch it and show the message to the user.

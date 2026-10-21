@@ -3,8 +3,8 @@ import bcrypt from 'bcryptjs'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { cache } from 'react'
-import { prisma } from '@/lib/prisma'
-import type { Role } from '@/lib/generated/prisma/client'
+import { prisma } from '@shift-manager/database'
+import type { Role } from '@shift-manager/database'
 
 const SESSION_COOKIE = 'session'
 const SESSION_DAYS = 7

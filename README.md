@@ -40,10 +40,11 @@ pnpm install
 
 ```bash
 cp .env.example .env                                         # MySQL credentials for Docker Compose
-cp packages/database/.env.example packages/database/.env    # DATABASE_URL for Prisma
+cp packages/database/.env.example packages/database/.env    # DATABASE_URL for Prisma CLI and seed
+cp apps/web/.env.example apps/web/.env                        # DATABASE_URL for the web app
 ```
 
-Keep the user and password in `packages/database/.env` in sync with the root `.env`.
+Keep the user and password in both `DATABASE_URL`s in sync with the root `.env`.
 
 ### 3. Start MySQL
 

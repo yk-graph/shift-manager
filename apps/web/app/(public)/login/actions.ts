@@ -1,7 +1,7 @@
 'use server'
 
 import { redirect } from 'next/navigation'
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@shift-manager/database'
 import { checkPassword, createSession, deleteSession, homePathFor } from '@/lib/auth'
 
 export type LoginState = { error?: string }
